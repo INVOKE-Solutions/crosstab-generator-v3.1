@@ -159,23 +159,30 @@ def multi_choice_crosstab_column(df, q, column, value='weight', column_seq=None)
         else:
             demo_df = df[df[column] == demo]                                           # create a dataframe of all rows that contain demo
             
-        for i in demo_df.index:
+        updated_df = demo_df[q].replace('',np.nan)
+        temp_df = updated_df.dropna()
+        weight_list = df[value].to_list()
+        total_sum = 0
+        for j in temp_df.index:
+            sum = weight_list[j]
+            total_sum += sum
+
+        for i in temp_df.index:
             answer = str(demo_df[q][i])                                                # extract all answers of question q with index i in the form of a string
             if answer != 'nan':
                 answer = answer.split(', ')                                            # split the answers
-                total_weight = 0
                 for ans in answer:
-                    total_weight = df[value][i]                                        # find the weight for each answer
                     if ans not in ans_dict:
                         ans_dict[ans] = df[value][i]                                   # create an input in the ans_dict with its weight
                     else:
                         ans_dict[ans] += df[value][i]                                  # add the weight of the same input in the ans_dict
 
         for key, val in ans_dict.items():
-            ans_dict[key] = round(val/sum(list(demo_df[value])),4)                     # divide each input with the total weight sum of demo
+            ans_dict[key] = round(val/total_sum,4)                                     # divide each input with the total weight sum of demo
         ans_dict = dict(sorted(ans_dict.items(), key=lambda x: x[1], reverse=True))    # sort the items in descending order
         if demo == 'Grand Total':
-            row_labels = list(ans_dict.keys())
+            row_list = list(ans_dict.keys())
+            row_labels = list(filter(None, row_list))
             gt = list(ans_dict.values())
         else:
             demo_dict[demo] = ans_dict                                                 # create a dictionary of demo and its items + values
@@ -214,13 +221,15 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
 
     demo_dict = {}
     ans_dict = {}
-    for i in df.index:
+
+    updated_df = df[q].replace('',np.nan)
+    temp_df = updated_df.dropna()
+
+    for i in temp_df.index:
       answer = str(df[q][i])                                                           # extract all answers of question q with index i in the form of a string
       if answer != 'nan':
           answer = answer.split(', ')                                                  # split the answers
-          total_weight = 0
           for ans in answer:
-              total_weight = df[value][i]                                              # find the weight for each answer
               if ans not in ans_dict:
                   ans_dict[ans] = df[value][i]                                         # create an input in the ans_dict with its weight
               else:
@@ -232,23 +241,24 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
             demo_df = df
         else:
             demo_df = df[df[column] == demo]                                           # create a dataframe of all rows that contain demo
-            
-        for i in demo_df.index:
+        
+        updated_df2 = demo_df[q].replace('',np.nan)
+        temp_df2 = updated_df2.dropna()
+
+        for i in temp_df2.index:
             answer = str(demo_df[q][i])                                                # extract all answers of question q with index i in the form of a string
             if answer != 'nan':
                 answer = answer.split(', ')                                            # split the answers
-                total_weight = 0
                 for ans in answer:
-                    total_weight = df[value][i]                                        # find the weight for each answer
                     if ans not in ans_dict2:
                         ans_dict2[ans] = df[value][i]                                  # create an input in the ans_dict with its weight
                     else:
                         ans_dict2[ans] += df[value][i]                                 # add the weight of the same input in the ans_dict
 
         new_dict = {x:float(ans_dict2[x])/ans_dict[x] for x in ans_dict2}
-        new_dict = {key : round(new_dict[key], 4) for key in new_dict}
-                    
+        new_dict = {key : round(new_dict[key], 4) for key in new_dict}      
         new_dict = dict(sorted(new_dict.items(), key=lambda x: x[1], reverse=True))    # sort the items in descending order
+
         if demo == 'Grand Total':
             row_labels = list(new_dict.keys())
             gt = list(new_dict.values())
@@ -286,33 +296,18 @@ if df:
     weight = st.selectbox('Select weight column', ['', 'Unweighted'] + list(df.columns))
     if weight != '':
         demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns))
-
-        '''
-        Code to let the users arrange the input sequence of the demographic selected
-        Commented because Jud asked to remove this to save time, but might be important for future enhancement
-        Currently the input sequence of the demographic selected (column headers) are unordered
-        '''
         
-        # if len(demos) > 0:
-        #     # Ensure that all the demographic values have been selected before proceeding
-        #     score = 0
-        #     col_seqs = {}
-        #     for demo in demos:
-        #         st.subheader('Column: ' + demo)
-        #         col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), key = demo)
-        #         col_seqs[demo] = col_seq
-        #         if len(col_seq) == df[demo].nunique():
-        #             score += 1
-    
         if len(demos) > 0:
             # Ensure that all the demographic values have been selected before proceeding
             score = 0
             col_seqs = {}
             for demo in demos:
-                demo_list = list(df[demo].unique())
-                col_seqs[demo] = demo_list
-                if len(demo_list) == df[demo].nunique():
+                st.subheader('Column: ' + demo)
+                col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), key = demo)
+                col_seqs[demo] = col_seq
+                if len(col_seq) == df[demo].nunique():
                     score += 1
+
             if score == len(demos):
                 first = st.selectbox('Select the first question of the survey', [''] + list(df.columns))
                 if first != '':
