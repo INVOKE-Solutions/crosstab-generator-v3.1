@@ -15,7 +15,16 @@ This project aims to expedite our crosstab generation process from long minutes 
 
 ### File Description
 
-1. 
+1. .streamlit
+   Set the default theme to dark
+2. README.md
+   Project documentation
+3. generator.py
+   Project code
+4. invoke_logo.jpg
+   Invoke logo to be imported into generator.py
+5. requirements.txt
+   All of the libraries and their versions required for the project
 
 On that note, since this is the second version and not the final product, there are a couple of things that you should take note of.
 
