@@ -17,4 +17,11 @@ On that note, since this is the second version and not the final product, there 
 
 <!-- TO-DO (Jud's Comment) -->
 
+<br />
+<br />
+
+### Built With
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/yourGitHubName/yourRepo/yourApp/)
+
 
