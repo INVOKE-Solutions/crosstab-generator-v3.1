@@ -2,8 +2,8 @@
 
 An upgraded version of the previous crosstab generator 
 
-You can access through the link below <br />
-https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/
+You can access the crosstab generator through the link below <br />
+🠊 https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/
 
 ## What is Crosstab?
 
