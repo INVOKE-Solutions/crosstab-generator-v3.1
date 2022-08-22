@@ -13,7 +13,7 @@ Crosstab is a two- (or more) dimensional table that is usually used in data anal
 
 This project aims to expedite our crosstab generation process from long minutes of manual labour work using Excel pivot table to just a mere couple of seconds. With this crosstab generator, one just need to upload the weighted data file, wait for a couple of seconds and boom - the crosstab is set for you! By automating the crosstab generation process, we hope to divert the time and energy that are previously used for crosstab to other purposes, so that we can improve our overall survey work.
 
-### File Description
+### File Descriptions
 
 1. **.streamlit** <br />
    Set the default theme to dark
@@ -60,5 +60,25 @@ If you are working on this project, simply follow the guide below.
    There are a lot of public cloud platforms out there that you can use to deploy your Streamlit app. However, in this project, we use Streamlit Cloud since it is free 
    and easy to manage. You need to create a Streamlit Cloud account in order to deploy a new Streamlit app as well as to monitor other Streamlit apps in our existing 
    Invoke Analytics repositories. To create an account, simply sign up once you click this [link](https://code.visualstudio.com/download).
+   
+### Contributions
+
+Once you have met all of the prerequisites and completed the installations, you can now start working on the project. 
+
+1. Firstly, fork this repository. Make sure the owner of the repository is INVOKE-Analytics.
+
+2. Create a new folder on your local computer.
+
+3. Open Visual Studio Code, click Open Folder and choose the folder that you just created.
+
+4. Open Git Bash terminal.
+
+5. Clone your forked repository into the folder by applying the git command below.
+
+   ```
+   git clone your-forked-repo-url
+   
+   ```
+6. 
 
 
