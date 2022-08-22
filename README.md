@@ -32,7 +32,7 @@ On that note, since this is the second version and not the final product, there 
 
 ### Built With
 
-[![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/)
 
 ## Getting Started
 
