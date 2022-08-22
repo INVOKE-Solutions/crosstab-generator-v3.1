@@ -78,6 +78,38 @@ Once you have met all of the prerequisites and completed the installations, you 
    ```
    git clone your-forked-repo-url
    ```
-6. 
+   
+6. Now, a copy of all the files should appear on your folder. The next step is to create a separate version of the repository that is usually called branch. This will 
+   be the place where you will be working on your code. To do this, go to the python file (generator.py) by using 
+   ```
+   cd generator.py
+   ```
+   
+7. To create a new branch, simply type
+   ```
+   git checkout -b branch-name
+   ```
 
+8. Congrats!! Now you are in your newly isolated branch. You can freely edit your code over here.
 
+9. After you have finished editing the code, it is now time to push it into your forked repository. You can do that firstly by performing the two lines below
+   ```
+   git add generator.py
+   git commit -m your-message
+   ```
+ 
+10. The next step would be to update your code in the local main. You can go to your local main by using
+   ```
+   git checkout main
+   ```
+   
+11. After that, you can update the local main by merging the main with the branch. You can use the code below.
+   ```
+   git merge branch-name
+   ```
+
+12. Boom!! :confetti_ball: Now, your code has been updated into the local main. You just have one step left in your bucket. To finish off, you need to push the 
+    code from your local computer to your forked Github repository (remote). Just write
+    ```
+    git push
+    ```
