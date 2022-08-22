@@ -36,8 +36,19 @@ On that note, since this is the second version and not the final product, there 
 
 ## Getting Started
 
-If you just want to use the app, you can simply click  [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/)  **or** <br />
-you can click on the link given at the top of this README page.
+If you are working on this project, simply follow the guide below.
+
+### Prerequisites
+
+1. Github Account
+2. Git Bash
+3. Visual Studio Code
+4. Streamlit Cloud
+
+### Installations
+
+1. **Github Account** <br />
+   If you are reading this document, that means you already have a Github account. Congratss!! :partying_face: :tada: But if you simple want to create a new account,      click [here]([https://www.google.com](https://docs.github.com/en/get-started/onboarding/getting-started-with-your-github-account)) for more information about it.
 
 
 
