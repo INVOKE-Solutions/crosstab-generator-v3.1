@@ -36,9 +36,7 @@ On that note, since this is the second version and not the final product, there 
 
 ## Getting Started
 
-### Prerequisites
-
-*
+If you just want to use the app, you can simply click here [![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/) or you can click on the link given at the top of this README page.
 
 
 
