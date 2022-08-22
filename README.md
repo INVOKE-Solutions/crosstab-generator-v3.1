@@ -48,7 +48,7 @@ If you are working on this project, simply follow the guide below.
 ### Installations
 
 1. **Github Account** <br />
-   If you are reading this document, that means you already have a Github account. Congratss!! :partying_face: :tada: But if you simple want to create a new account,      click [here]([https://www.google.com](https://docs.github.com/en/get-started/onboarding/getting-started-with-your-github-account) for more information about it.
+   If you are reading this document, that means you already have a Github account. Congratss!! :partying_face: :tada: But if you simple want to create a new account,      click [here](https://docs.github.com/en/get-started/onboarding/getting-started-with-your-github-account) for more information about it.
 
 
 
