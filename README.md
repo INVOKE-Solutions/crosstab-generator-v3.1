@@ -59,6 +59,6 @@ If you are working on this project, simply follow the guide below.
 4. **Streamlit Cloud** <br />
    There are a lot of public cloud platforms out there that you can use to deploy your Streamlit app. However, in this project, we use Streamlit Cloud since it is free 
    and easy to manage. You need to create a Streamlit Cloud account in order to deploy a new Streamlit app as well as to monitor other Streamlit apps in our existing 
-   Invoke Analytics repositories. To create an account, simply sign up once you click this [link](https://code.visualstudio.com/download)
+   Invoke Analytics repositories. To create an account, simply sign up once you click this [link](https://code.visualstudio.com/download).
 
 
