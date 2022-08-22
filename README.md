@@ -21,7 +21,8 @@ On that note, since this is the second version and not the final product, there 
 <br />
 
 ### Built With
-
+https://static.streamlit.io/badges/streamlit_badge_black_white.svg
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/yourGitHubName/yourRepo/yourApp/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/jkanner/streamlit-audio/main/app.py)
 
 
