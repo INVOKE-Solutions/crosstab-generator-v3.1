@@ -24,7 +24,7 @@ This project aims to expedite our crosstab generation process from long minutes 
 4. **invoke_logo.jpg** <br />
    Invoke logo to be imported into generator.py
 5. **requirements.txt** <br />
-   All of the libraries and their versions required for the project
+   List of the libraries and their respected versions required for the project
 
 On that note, since this is the second version and not the final product, there are a couple of things that you should take note of.
 
