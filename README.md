@@ -77,7 +77,6 @@ Once you have met all of the prerequisites and completed the installations, you 
 
    ```
    git clone your-forked-repo-url
-   
    ```
 6. 
 
