@@ -53,10 +53,10 @@ If you are working on this project, simply follow the guide below.
 2. **Git Bash** <br />
    If you have never heard of it before, Git Bash is a source control management system for Windows that allows users to type Git commands (such as git clone and git      commit) which we will use a lot in this project. To install it, download the Git Bash setup from the official website: https://git-scm.com/
 
-3. **Visual Studio Code**
+3. **Visual Studio Code** <br />
    This is the suggested IDE for this project. The reason for this is because Visual Studio Code works seamlessly with Git since there is a Git Bash extension that you    can easily install in it. You can go to this [page](https://code.visualstudio.com/download) to download Visual Studio Code that matches your operating system. 
    
-4. **Streamlit Cloud**
+4. **Streamlit Cloud** <br />
    There are a lot of public cloud platforms out there that you can use to deploy your Streamlit app. However, in this project, we use Streamlit Cloud since it is free 
    and easy to manage. You need to create a Streamlit Cloud account in order to deploy a new Streamlit app as well as to monitor other Streamlit apps in our existing 
    Invoke Analytics repositories. To create an account, simply sign up once you click this [link](https://code.visualstudio.com/download)
