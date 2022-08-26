@@ -28,20 +28,20 @@ This project aims to expedite our crosstab generation process from long minutes 
 
 ### Progress
 
-Some features that are available in the version 2 of crosstab generator:
+**Some features that are available in the version 2 of crosstab generator:**
 
 1. User can select the values to be shown in either % of total column, % of total row or both
 2. The crosstable automatically removes blank cells in filtered question, so they are not included in the calculations
 
-Feedbacks for future development ideas:
+**Feedbacks for future development ideas:**
 
-1. Pre-selection on:
-   * Weight column. Automatically select the weight **column** if detected
-   * 3 basic demographic columns. Automatically select **gender**, **agegroup** and **ethgroup** 
+**1. Pre-selection on:**
+   * Weight column. Automatically select the weight column if detected
+   * 3 basic demographic columns. Automatically select gender, agegroup and ethgroup
      columns if detected
-   * Multiple answer questions. Automatically detect **[MULTI]**
+   * Multiple answer questions. Automatically detect [MULTI]
    
-2. Automatic Column Sequence:
+**2. Automatic Column Sequence:**
    * gender - sort from Z-A (Male, Female)
    * agegroup - sort from A-Z (ascending order)
    * ethgroup - sort in the following sequence (Malay, Chinese, Indian, Bumiputera or Others)
