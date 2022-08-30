@@ -111,7 +111,7 @@ Once you have met all of the prerequisites and completed the installations, you 
 9. After you have finished editing the code, it is now time to push it into your forked repository. You can do that firstly by performing the two lines below
    ```
    git add generator.py
-   git commit -m your-message
+   git commit -m 'your-message'
    ```
  
 10. The next step would be to update your code in the local main. You can go to your local main by using
