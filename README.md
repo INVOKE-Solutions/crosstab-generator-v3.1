@@ -33,6 +33,11 @@ This project aims to expedite our crosstab generation process from long minutes 
 1. User can select the values to be shown in either % of total column, % of total row or both
 2. The crosstable automatically removes blank cells in filtered question, so they are not included in the calculations
 
+### ⚠ Attention
+
+1. Before uploading your Excel file, make sure that the demographic column name characters is less than 10 chars. Exceeding chars will lead to error due to Excel formatting. 
+2. On _Select column weight_ section choice, `Unweighted` choice has some unsettled bugs. Hence, if your dataset is _Unweighted_, create one extra column name *weight* with all value 1. Then choose this column name for this part.
+
 **Feedbacks for future development ideas:**
 
 **1. Pre-selection on:**
