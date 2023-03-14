@@ -3,7 +3,7 @@
 An upgraded version of the previous crosstab generator 
 
 You can access the crosstab generator through the link below <br />
-🠊 https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/
+🠊 https://invoke-analytics-crosstab-generator-v2-generator-axdlp3.streamlit.app/
 
 ## What is Crosstab?
 
