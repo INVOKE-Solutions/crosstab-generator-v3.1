@@ -353,6 +353,10 @@ if df:
             col_seqs = {}
             for demo in demos:
                 st.subheader('Column: ' + demo)
+                if demo == 'agegroup':
+                    agegroup = sorted(list(df['agegroup'].unique()))
+                elif demo == 'gender':
+
                 col_seq = st.multiselect(
                     'Please arrange ALL values in order', list(df[demo].unique()), key=demo)
                 col_seqs[demo] = col_seq
