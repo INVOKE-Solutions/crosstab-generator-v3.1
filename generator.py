@@ -8,6 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from colour import Color
 import numpy as np
+import re
 
 # Hide streamlit header and footer
 hide_st_style = """
@@ -320,6 +321,39 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     return result
 
 
+def sorter(demo, df):
+    '''
+    Create a function to sort the list of the unique value in the demographic column.
+
+    demo: 
+    df: Whole dataframe [pandas dataframe]
+    '''
+    if demo == 'agegroup':
+        return sorted(list(df['agegroup'].unique()))
+
+    elif demo == 'gender':
+        return sorted(list(df['gender'].unique()),
+                      key=lambda x: (re.match(r'^M|^L', x, re.IGNORECASE) is None,
+                                     re.match(r'^F|^P', x, re.IGNORECASE) is None))
+
+    elif demo == 'ethgroup':
+        return sorted(list(df['ethgroup'].unique()),
+                      key=lambda x: (0 if re.match(r'^M', x, re.IGNORECASE) else
+                                     1 if re.match(r'^C', x, re.IGNORECASE) else
+                                     2 if re.match(r'^I', x, re.IGNORECASE) else
+                                     3 if re.match(r'^B', x, re.IGNORECASE) else
+                                     4 if re.match(r'^O|^L', x, re.IGNORECASE) else 5))
+
+    elif demo == 'incomegroup':
+        return sorted(list(df['incomegroup'].unique()))
+
+    elif demo == 'urbanity':
+        return sorted(list(df['urbanity'].unique()),
+                      key=lambda x: (0 if re.match(r'^U|^B', x) else
+                                     1 if re.match(r'^S', x) else
+                                     2 if re.match(r'^R|^L', x) else 3))
+
+
 image = Image.open('invoke_logo.jpg')
 st.title('Crosstabs Generator')
 st.image(image)
@@ -339,8 +373,7 @@ if df:
     weight = st.multiselect('Select weight column and choose only 1',
                             ['', 'weight', 'untrimmed_weight', 'trimmed_weight', 'Unweighted'], ['untrimmed_weight', 'trimmed_weight'])
     if weight != '':
-        default_demo = ['agegroup', 'gender',
-                        'ethgroup', 'incomegroup', 'urbanity']
+        default_demo = ['agegroup', 'gender', 'ethgroup', 'incomegroup', 'urbanity']
         data_list = list(df.columns)
         default_demo = [item for item in default_demo if item in data_list]
         demos = st.multiselect(
@@ -353,12 +386,9 @@ if df:
             col_seqs = {}
             for demo in demos:
                 st.subheader('Column: ' + demo)
-                if demo == 'agegroup':
-                    agegroup = sorted(list(df['agegroup'].unique()))
-                elif demo == 'gender':
-
                 col_seq = st.multiselect(
-                    'Please arrange ALL values in order', list(df[demo].unique()), key=demo)
+                    'Please arrange ALL values in order', list(df[demo].unique()), 
+                    default=sorter(demo, df=df), key=demo)
                 col_seqs[demo] = col_seq
                 if len(col_seq) == df[demo].nunique():
                     score += 1
