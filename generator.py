@@ -468,8 +468,7 @@ if df:
 
                                                 table_2.to_excel(
                                                     writer, index=False, sheet_name=f"{demo}(row)", startrow=start_2)
-                                                start_2 = start_2 + \
-                                                    len(table_2) + 3
+                                                start_2 = start_2 + len(table_2) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(row)"]
 
