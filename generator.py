@@ -433,10 +433,8 @@ if df:
                                 with st.spinner('Building crosstabs...'):
                                     # Initialize excel file
                                     output = BytesIO()
-                                    writer = pd.ExcelWriter(
-                                        output, engine='xlsxwriter')
-                                    df.to_excel(writer, index=False,
-                                                sheet_name='data')
+                                    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+                                    df.to_excel(writer, index=False, sheet_name= 'data')
 
                                     # Write tables one by one according to the type of question
                                     for demo in demos:
@@ -444,14 +442,11 @@ if df:
                                             start = 1
                                             for q in q_ls:
                                                 if q in multi:
-                                                    table = multi_choice_crosstab_column(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
                                                 else:
-                                                    table = single_choice_crosstab_column(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(
-                                                    writer, index=False, sheet_name=f"{demo}(column)", startrow=start)
+                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(column)", startrow = start)
                                                 start = start + len(table) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(column)"]
@@ -459,31 +454,24 @@ if df:
                                             start_2 = 1
                                             for q in q_ls:
                                                 if q in multi:
-                                                    table_2 = multi_choice_crosstab_row(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table_2 = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
                                                 else:
-                                                    table_2 = single_choice_crosstab_row(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table_2 = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table_2.to_excel(
-                                                    writer, index=False, sheet_name=f"{demo}(row)", startrow=start_2)
-                                                start_2 = start_2 + \
-                                                    len(table_2) + 3
+                                                table_2.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start_2)
+                                                start_2 = start_2 + len(table_2) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(row)"]
-
+                                        
                                         elif wise == '% of Column Total':
                                             start = 1
                                             for q in q_ls:
                                                 if q in multi:
-                                                    table = multi_choice_crosstab_column(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
                                                 else:
-                                                    table = single_choice_crosstab_column(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(
-                                                    writer, index=False, sheet_name=f"{demo}(column)", startrow=start)
+                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(column)", startrow = start)
                                                 start = start + len(table) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(column)"]
@@ -492,22 +480,18 @@ if df:
                                             start = 1
                                             for q in q_ls:
                                                 if q in multi:
-                                                    table = multi_choice_crosstab_row(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
                                                 else:
-                                                    table = single_choice_crosstab_row(
-                                                        df, q, demo, value=weight, column_seq=col_seqs[demo])
+                                                    table = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(
-                                                    writer, index=False, sheet_name=f"{demo}(row)", startrow=start)
+                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start)
                                                 start = start + len(table) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(row)"]
-
+                                
                                 writer.save()
                                 df_xlsx = output.getvalue()
                                 df_name = df_name[:df_name.find('.')]
                                 st.balloons()
                                 st.header('Crosstabs ready for download!')
-                                st.download_button(
-                                    label='📥 Download', data=df_xlsx, file_name=df_name + '-crosstabs.xlsx')
+                                st.download_button(label='📥 Download', data=df_xlsx, file_name= df_name + '-crosstabs.xlsx')
