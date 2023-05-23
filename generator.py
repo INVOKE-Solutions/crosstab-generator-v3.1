@@ -341,7 +341,7 @@ if df:
     else:
         df = pd.read_excel(df, na_filter = False)
     
-    weight = st.multiselect('Select weight column and choose only 1', ['', 'weight', 'untrimmed_weight', 'trimmed_weight', 'Unweighted'], ['untrimmed_weight', 'trimmed_weight'])
+    weight = st.selectbox('Select weight column', ['', 'Unweighted'] + list(df.columns))
     if weight != '':
         default_demo = ['agegroup', 'gender','ethgroup', 'incomegroup', 'urbanity']
         data_list = list(df.columns)
