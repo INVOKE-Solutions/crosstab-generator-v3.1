@@ -318,9 +318,25 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     return result
 
 
+def col_search(df, key):
+    '''
+    A function to autoselect column/s with the keyword.
+
+    df: Whole dataframe [pandas dataframe]
+    demo: Column name of the demography you're building the table on [str]
+    '''
+    columns_with_string = []
+
+    for column in df.columns:
+        if key in column:
+            columns_with_string.append(column)
+
+    return columns_with_string
+
+
 def sorter(demo, df):
     '''
-    Create a function to sort the list of the unique value in the demographic column.
+    A function to sort the list of the unique value in the demographic column.
 
     demo: Column name of the demography you're building the table on [str]
     df: Whole dataframe [pandas dataframe]
@@ -351,23 +367,7 @@ def sorter(demo, df):
                                      2 if re.match(r'^R|^L', x) else 3))
 
 
-def multi_column(df, key):
-    '''
-    Create a function to autoselect the multiple answer column.
-
-    df: Whole dataframe [pandas dataframe]
-    key: keyword [str]
-    '''
-    columns_with_string = []
-
-    for column in df.columns:
-        if key in column:
-            columns_with_string.append(column)
-
-    return columns_with_string
-
-
-image = Image.open('invoke_logo.jpg')
+image = Image.open('invoke_logo.png')
 st.title('Crosstabs Generator')
 st.image(image)
 
@@ -382,9 +382,8 @@ if df:
     else:
         df = pd.read_excel(df, na_filter=False)
 
-    # weight_columns = [col for col in df.columns if 'weight' in col.lower()]
-    weight = st.multiselect('Select weight column and choose only 1',
-                            ['', 'weight', 'untrimmed_weight', 'trimmed_weight', 'Unweighted'], ['untrimmed_weight', 'trimmed_weight'])
+    weight = st.selectbox('Select weight column', col_search(
+        df, key="weight") + ['Unweighted', ''])
     if weight != '':
         default_demo = ['agegroup', 'gender',
                         'ethgroup', 'incomegroup', 'urbanity']
@@ -427,8 +426,8 @@ if df:
                             'Show values as:', [''] + wise_list)
                         if wise != '':
                             multi = st.multiselect('Choose mutiple answers question(s), if any', list(
-                                df.columns)[first_idx: last_idx + 1], multi_column(df[first_idx: last_idx + 1],
-                                                                                   key="[MULTI]"))
+                                df.columns)[first_idx: last_idx + 1], col_search(df[first_idx: last_idx + 1],
+                                                                                 key="[MULTI]"))
                             button = st.button('Generate Crosstabs')
                             if button:
                                 with st.spinner('Building crosstabs...'):
@@ -468,7 +467,8 @@ if df:
 
                                                 table_2.to_excel(
                                                     writer, index=False, sheet_name=f"{demo}(row)", startrow=start_2)
-                                                start_2 = start_2 + len(table_2) + 3
+                                                start_2 = start_2 + \
+                                                    len(table_2) + 3
                                                 workbook = writer.book
                                                 worksheet = writer.sheets[f"{demo}(row)"]
 
