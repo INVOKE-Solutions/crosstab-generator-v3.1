@@ -317,7 +317,7 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     result['Grand Total'] = gt
     return result
 
-
+  
 def col_search(df, key):
     '''
     A function to autoselect column/s with the keyword.
@@ -385,24 +385,18 @@ if df:
     weight = st.selectbox('Select weight column', col_search(
         df, key="weight") + ['Unweighted', ''])
     if weight != '':
-        default_demo = ['agegroup', 'gender',
-                        'ethgroup', 'incomegroup', 'urbanity']
+        default_demo = ['agegroup', 'gender','ethgroup', 'incomegroup', 'urbanity']
         data_list = list(df.columns)
         default_demo = [item for item in default_demo if item in data_list]
-        demos = st.multiselect(
-            'Choose the demograhic(s) you want to build the crosstabs across', list(
-                df.columns) + default_demo, default_demo)
-
+        demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns) + default_demo, default_demo)
+        
         if len(demos) > 0:
             # Ensure that all the demographic values have been selected before proceeding
             score = 0
             col_seqs = {}
             for demo in demos:
                 st.subheader('Column: ' + demo)
-                col_seq = st.multiselect(
-                    'Please arrange ALL values in order', list(
-                        df[demo].unique()),
-                    default=sorter(demo, df=df), key=demo)
+                col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), default=sorter(demo, df=df), key = demo)
                 col_seqs[demo] = col_seq
                 if len(col_seq) == df[demo].nunique():
                     score += 1
@@ -425,9 +419,7 @@ if df:
                         wise = st.selectbox(
                             'Show values as:', [''] + wise_list)
                         if wise != '':
-                            multi = st.multiselect('Choose mutiple answers question(s), if any', list(
-                                df.columns)[first_idx: last_idx + 1], col_search(df[first_idx: last_idx + 1],
-                                                                                 key="[MULTI]"))
+                            multi = st.multiselect('Choose mutiple answers question(s), if any', list(df.columns)[first_idx: last_idx + 1], multi_column(df[first_idx: last_idx + 1], key="[MULTI]"))
                             button = st.button('Generate Crosstabs')
                             if button:
                                 with st.spinner('Building crosstabs...'):
