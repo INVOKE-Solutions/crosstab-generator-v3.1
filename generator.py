@@ -8,6 +8,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from colour import Color
 import numpy as np
+import re
 
 # Hide streamlit header and footer
 hide_st_style = """
@@ -278,6 +279,53 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     return result
 
 
+def sorter(demo, df):
+    '''
+    Create a function to sort the list of the unique value in the demographic column.
+
+    demo: Column name of the demography you're building the table on [str]
+    df: Whole dataframe [pandas dataframe]
+    '''
+    if demo == 'agegroup':
+        return sorted(list(df['agegroup'].unique()))
+
+    elif demo == 'gender':
+        return sorted(list(df['gender'].unique()),
+                      key=lambda x: (re.match(r'^M|^L', x, re.IGNORECASE) is None,
+                                     re.match(r'^F|^P', x, re.IGNORECASE) is None))
+
+    elif demo == 'ethgroup':
+        return sorted(list(df['ethgroup'].unique()),
+                      key=lambda x: (0 if re.match(r'^M', x, re.IGNORECASE) else
+                                     1 if re.match(r'^C', x, re.IGNORECASE) else
+                                     2 if re.match(r'^I', x, re.IGNORECASE) else
+                                     3 if re.match(r'^B', x, re.IGNORECASE) else
+                                     4 if re.match(r'^O|^L', x, re.IGNORECASE) else 5))
+
+    elif demo == 'incomegroup':
+        return sorted(list(df['incomegroup'].unique()))
+
+    elif demo == 'urbanity':
+        return sorted(list(df['urbanity'].unique()),
+                      key=lambda x: (0 if re.match(r'^U|^B', x) else
+                                     1 if re.match(r'^S', x) else
+                                     2 if re.match(r'^R|^L', x) else 3))
+
+
+def multi_column(df, key):
+    '''
+    Create a function to autoselect the multiple answer column.
+
+    df: Whole dataframe [pandas dataframe]
+    key: keyword [str]
+    '''
+    columns_with_string = []
+
+    for column in df.columns:
+        if key in column:
+            columns_with_string.append(column)
+
+    return columns_with_string
 
 image = Image.open('invoke_logo.jpg')
 st.title('Crosstabs Generator')
@@ -293,9 +341,12 @@ if df:
     else:
         df = pd.read_excel(df, na_filter = False)
     
-    weight = st.selectbox('Select weight column', ['', 'Unweighted'] + list(df.columns))
+    weight = st.multiselect('Select weight column and choose only 1', ['', 'weight', 'untrimmed_weight', 'trimmed_weight', 'Unweighted'], ['untrimmed_weight', 'trimmed_weight'])
     if weight != '':
-        demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns))
+        default_demo = ['agegroup', 'gender','ethgroup', 'incomegroup', 'urbanity']
+        data_list = list(df.columns)
+        default_demo = [item for item in default_demo if item in data_list]
+        demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns) + default_demo, default_demo)
         
         if len(demos) > 0:
             # Ensure that all the demographic values have been selected before proceeding
@@ -303,7 +354,7 @@ if df:
             col_seqs = {}
             for demo in demos:
                 st.subheader('Column: ' + demo)
-                col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), key = demo)
+                col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), default=sorter(demo, df=df), key = demo)
                 col_seqs[demo] = col_seq
                 if len(col_seq) == df[demo].nunique():
                     score += 1
@@ -320,7 +371,7 @@ if df:
                         wise_list = ['% of Column Total', '% of Row Total', 'Both']
                         wise = st.selectbox('Show values as:', [''] + wise_list)
                         if wise != '':
-                            multi = st.multiselect('Choose mutiple answers question(s), if any', list(df.columns)[first_idx: last_idx + 1])
+                            multi = st.multiselect('Choose mutiple answers question(s), if any', list(df.columns)[first_idx: last_idx + 1], multi_column(df[first_idx: last_idx + 1], key="[MULTI]"))
                             button = st.button('Generate Crosstabs')
                             if button:
                                 with st.spinner('Building crosstabs...'):
