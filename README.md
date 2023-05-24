@@ -3,7 +3,7 @@
 An upgraded version of the previous crosstab generator 
 
 You can access the crosstab generator through the link below <br />
-🠊 https://invoke-analytics-crosstab-generator-v2-generator-axdlp3.streamlit.app/
+🠊 https://invoke-analytics-crosstab-generator-v3-generator-6pyb9x.streamlit.app/
 
 ## What is Crosstab?
 
@@ -28,28 +28,30 @@ This project aims to expedite our crosstab generation process from long minutes 
 
 ### Progress
 
-**Some features that are available in the version 2 of crosstab generator:**
+**Some features that are available in the version 3 of crosstab generator:**
 
-1. User can select the values to be shown in either % of total column, % of total row or both
-2. The crosstable automatically removes blank cells in filtered question, so they are not included in the calculations
+**1. Pre-selection on:**
+   * Weight column. Automatically select the weight column if detected
+   * 5 basic demographic columns. Automatically select agegroup, gender, ethgroup, incomegroup and urbanity
+     columns if detected
+   * Multiple answer questions. Automatically detect columns with keyword=[MULTI]
+     
+**2. Automatic Column Sequence in Malay and English:**
+   * gender - sort from Male to Female/M to F/Lelaki to Perempuan/L to P
+   * agegroup - sort from A-Z (ascending order)
+   * ethgroup - sort in the following sequence (Malay, Chinese, Indian, Bumiputera or Others) or (Melayu, Cina, India, Bumiputera or Lain-Lain)
 
 ### ⚠ Attention
 
 1. Before uploading your Excel file, make sure that the demographic column name characters is less than 10 chars. Exceeding chars will lead to error due to Excel formatting. 
 2. On _Select column weight_ section choice, `Unweighted` choice has some unsettled bugs. Hence, if your dataset is _Unweighted_, create one extra column name *weight* with all value 1. Then choose this column name for this part.
 
-**Feedbacks for future development ideas:**
+**Under development ideas:**
 
-**1. Pre-selection on:**
-   * Weight column. Automatically select the weight column if detected
-   * 3 basic demographic columns. Automatically select gender, agegroup and ethgroup
-     columns if detected
-   * Multiple answer questions. Automatically detect [MULTI]
-   
-**2. Automatic Column Sequence:**
-   * gender - sort from Z-A (Male, Female)
-   * agegroup - sort from A-Z (ascending order)
-   * ethgroup - sort in the following sequence (Malay, Chinese, Indian, Bumiputera or Others)
+**1. Automation of clustered bar chart creation:**
+*  Automate the creation of the clustered bar chart in reference to the generated crosstab table. 
+
+**2. Modularize all functions:**
    
 ### Built With
 
