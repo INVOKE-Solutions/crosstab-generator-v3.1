@@ -387,10 +387,10 @@ if df:
                                                 else:
                                                     table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(column)", startrow = start)
+                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
                                                 start = start + len(table) + 3
                                                 workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(column)"]
+                                                worksheet = writer.sheets[f"{demo}(col)"]
 
                                             start_2 = 1
                                             for q in q_ls:
@@ -412,10 +412,10 @@ if df:
                                                 else:
                                                     table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(column)", startrow = start)
+                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
                                                 start = start + len(table) + 3
                                                 workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(column)"]
+                                                worksheet = writer.sheets[f"{demo}(col)"]
 
                                         else:
                                             start = 1
