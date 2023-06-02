@@ -274,7 +274,7 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     result['Grand Total'] = gt
     return result
 
-  
+
 def col_search(df, key):
     '''
     A function to autoselect column/s with the keyword.
