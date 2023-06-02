@@ -87,7 +87,7 @@ def single_choice_crosstab_column(df, q, column=None, value='weight', column_seq
         df_ct[demo] = temp # Add new column to the data frame and input the values
 
     if row_seq == None:
-        df_ct = pd.concat([df_ct[:-1].sort_values('Grand Total', ascending=False), df_ct[-1:]])
+        df_ct = pd.concat([df_ct[:-1].sort_values(df_ct.columns[0]), df_ct[-1:]])
     return df_ct
 
 
@@ -274,7 +274,7 @@ def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
     result['Grand Total'] = gt
     return result
 
-  
+
 def col_search(df, key):
     '''
     A function to autoselect column/s with the keyword.
