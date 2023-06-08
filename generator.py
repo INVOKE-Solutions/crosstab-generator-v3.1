@@ -298,27 +298,27 @@ def sorter(demo, df):
     demo: Column name of the demography you're building the table on [str]
     df: Whole dataframe [pandas dataframe]
     '''
-    if demo == 'agegroup':
-        return sorted(list(df['agegroup'].unique()))
+    if re.search(r'age', demo, re.IGNORECASE):
+        return sorted(list(df[demo].unique()))
 
-    elif demo == 'gender':
-        return sorted(list(df['gender'].unique()),
+    elif re.search(r'gender', demo, re.IGNORECASE):
+        return sorted(list(df[demo].unique()),
                       key=lambda x: (re.match(r'^M|^L', x, re.IGNORECASE) is None,
                                      re.match(r'^F|^P', x, re.IGNORECASE) is None))
 
-    elif demo == 'ethgroup':
-        return sorted(list(df['ethgroup'].unique()),
+    elif re.search(r'eth', demo, re.IGNORECASE):
+        return sorted(list(df[demo].unique()),
                       key=lambda x: (0 if re.match(r'^M', x, re.IGNORECASE) else
                                      1 if re.match(r'^C', x, re.IGNORECASE) else
                                      2 if re.match(r'^I', x, re.IGNORECASE) else
                                      3 if re.match(r'^B', x, re.IGNORECASE) else
                                      4 if re.match(r'^O|^L', x, re.IGNORECASE) else 5))
 
-    elif demo == 'incomegroup':
-        return sorted(list(df['incomegroup'].unique()))
+    elif re.search(r'income', demo, re.IGNORECASE):
+        return sorted(list(df[demo].unique()))
 
-    elif demo == 'urbanity':
-        return sorted(list(df['urbanity'].unique()),
+    elif re.search(r'urban', demo, re.IGNORECASE):
+        return sorted(list(df[demo].unique()),
                       key=lambda x: (0 if re.match(r'^U|^B', x) else
                                      1 if re.match(r'^S', x) else
                                      2 if re.match(r'^R|^L', x) else 3))
@@ -340,9 +340,10 @@ if df:
 
     weight = st.selectbox('Select weight column', col_search(df, key="weight") + ['Unweighted', ''])
     if weight != '':
-        default_demo = ['agegroup', 'gender','ethgroup', 'incomegroup', 'urbanity']
+        default_demo = ['age', 'gender', 'eth', 'income', 'urban']
         data_list = list(df.columns)
-        default_demo = [item for item in default_demo if item in data_list]
+        pattern = re.compile('|'.join(default_demo), re.IGNORECASE)
+        default_demo = [item for item in data_list if pattern.search(item) and len(item.split()) <= 2]
         demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns) + default_demo, default_demo)
         
         if len(demos) > 0:
