@@ -343,6 +343,10 @@ def create_chart(df, start, worksheet):
                 'values': [worksheet.name, start[0] + 1, start[1] + i, start[0] + df_no_total.shape[0], start[1] + i],  # Include the last row
             })
 
+    # Set the chart title based on the first column
+    title = df_no_total.columns[0]
+    chart.set_title({'name': title})
+
     # Insert the chart into the worksheet
     worksheet.insert_chart(start[0] + df_no_total.shape[0] + 2, start[1] + df_no_total.shape[1] + 2, chart)
 
@@ -474,6 +478,9 @@ with tab2:
         # Exclude the first sheet (raw data)
         sheet_names_to_read = all_sheet_names[1:]
 
+        # Rename sheets based on initial sheet names
+        sheet_names = [name for name in sheet_names_to_read]
+
         # Read all tables from multiple sheets
         dfs = []
         for sheet_name in sheet_names_to_read:
@@ -485,17 +492,19 @@ with tab2:
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
         # Process each table separately
-        for sheet_idx, df in enumerate(dfs):
-            worksheet = workbook.add_worksheet(f"Sheet {sheet_idx + 1}")
+        for sheet_idx, (sheet_name, df) in enumerate(zip(sheet_names, dfs)):
+            worksheet = workbook.add_worksheet(sheet_name)
 
             larr = label(np.array(df.notnull()).astype("int"))
             start_row = 0
             for s in regionprops(larr):
                 sub_df = (df.iloc[s.bbox[0]:s.bbox[2], s.bbox[1]:s.bbox[3]].pipe(lambda df_: df_.rename(columns=df_.iloc[0]).drop(df_.index[0])))
                 
+                # Bold the column name
+                bold = workbook.add_format({'bold': 1})
                 # Write the sub_df to the worksheet
                 for i, col in enumerate(sub_df.columns):
-                    worksheet.write(start_row, i, col)
+                    worksheet.write(start_row, i, col, bold)
                     for j, value in enumerate(sub_df[col]):
                         worksheet.write(start_row + j + 1, i, value)
                 
