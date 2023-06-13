@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from colour import Color
 import numpy as np
 import re
+from skimage.measure import label, regionprops
+import xlsxwriter
 
 # Hide streamlit header and footer
 hide_st_style = """
@@ -324,116 +326,200 @@ def sorter(demo, df):
                                      2 if re.match(r'^R|^L', x) else 3))
 
 
+def create_chart(df, start, worksheet):
+    # Create a bar chart object
+    chart = workbook.add_chart({'type': 'bar'})
+    chart.set_style(11)
+
+    # Exclude the row that contains 'Grand Total'
+    df_no_total = df[df.iloc[:, 0] != 'Grand Total']
+
+    # Add data series to the chart
+    for i in range(1, df_no_total.shape[1] - 1):  # Exclude the last column
+        if df_no_total.columns[i] != 'Grand Total':  # Exclude column with name 'Grand Total'
+            chart.add_series({
+                'name': [worksheet.name, start[0], start[1] + i],
+                'categories': [worksheet.name, start[0] + 1, start[1], start[0] + df_no_total.shape[0], start[1]],  # Include the last row
+                'values': [worksheet.name, start[0] + 1, start[1] + i, start[0] + df_no_total.shape[0], start[1] + i],  # Include the last row
+            })
+
+    # Set the chart title based on the first column
+    title = df_no_total.columns[0]
+    chart.set_title({'name': title})
+
+    # Insert the chart into the worksheet
+    worksheet.insert_chart(start[0] + df_no_total.shape[0] + 2, start[1] + df_no_total.shape[1] + 2, chart)
+
+
 image = Image.open('invoke_logo.png')
 st.title('Crosstabs Generator')
 st.image(image)
+tab1, tab2 = st.tabs(["Crosstab Generator","Chart Generator"])
 
-st.subheader("Upload Survey responses (csv/xlsx)")
-df = st.file_uploader("Please ensure the data are cleaned and weighted (if need to be) prior to uploading.")
-if df:
-    df_name = df.name
-    # check file type and read them accordingly
-    if df_name[-3:] == 'csv':
-        df = pd.read_csv(df, na_filter=False)
-    else:
-        df = pd.read_excel(df, na_filter=False)
+with tab1:
+    st.subheader("Upload Survey responses (csv/xlsx)")
+    df = st.file_uploader("Please ensure the data are cleaned and weighted (if need to be) prior to uploading.")
+    if df:
+        df_name = df.name
+        # check file type and read them accordingly
+        if df_name[-3:] == 'csv':
+            df = pd.read_csv(df, na_filter=False)
+        else:
+            df = pd.read_excel(df, na_filter=False)
 
-    weight = st.selectbox('Select weight column', col_search(df, key="weight") + ['Unweighted', ''])
-    if weight != '':
-        default_demo = ['age', 'gender', 'eth', 'income', 'urban']
-        data_list = list(df.columns)
-        pattern = re.compile('|'.join(default_demo), re.IGNORECASE)
-        default_demo = [item for item in data_list if pattern.search(item) and len(item.split()) <= 2]
-        demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns) + default_demo, default_demo)
+        weight = st.selectbox('Select weight column', col_search(df, key="weight") + ['Unweighted', ''])
+        if weight != '':
+            default_demo = ['age', 'gender', 'eth', 'income', 'urban']
+            data_list = list(df.columns)
+            pattern = re.compile('|'.join(default_demo), re.IGNORECASE)
+            default_demo = [item for item in data_list if pattern.search(item) and len(item.split()) <= 2]
+            demos = st.multiselect('Choose the demograhic(s) you want to build the crosstabs across', list(df.columns) + default_demo, default_demo)
+            
+            if len(demos) > 0:
+                # Ensure that all the demographic values have been selected before proceeding
+                score = 0
+                col_seqs = {}
+                for demo in demos:
+                    st.subheader('Column: ' + demo)
+                    col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), default=sorter(demo, df=df), key = demo)
+                    col_seqs[demo] = col_seq
+                    if len(col_seq) == df[demo].nunique():
+                        score += 1
+
+                if score == len(demos):
+                    first = st.selectbox('Select the first question of the survey',[''] + list(df.columns))
+                    if first != '':
+                        first_idx = list(df.columns).index(first)
+                        last = st.selectbox('Select the last question of the survey', [''] + list(df.columns)[first_idx + 1:])
+                        if last != '':
+                            last_idx = list(df.columns).index(last)
+                            st.subheader('Number of questions to build the crosstab on: ' + str(last_idx - first_idx + 1))
+                            q_ls = [df.columns[x] for x in range(first_idx, last_idx + 1)]
+                            wise_list = ['% of Column Total','% of Row Total', 'Both']
+                            wise = st.selectbox('Show values as:', [''] + wise_list)
+                            if wise != '':
+                                multi = st.multiselect('Choose mutiple answers question(s), if any', list(df.columns)[first_idx: last_idx + 1], col_search(df[first_idx: last_idx + 1], key="[MULTI]"))
+                                button = st.button('Generate Crosstabs')
+                                if button:
+                                    with st.spinner('Building crosstabs...'):
+                                        # Initialize excel file
+                                        output = BytesIO()
+                                        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+                                        df.to_excel(writer, index=False, sheet_name= 'data')
+
+                                        # Write tables one by one according to the type of question
+                                        for demo in demos:
+                                            if wise == 'Both':
+                                                start = 1
+                                                for q in q_ls:
+                                                    if q in multi:
+                                                        table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
+                                                    else:
+                                                        table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
+
+                                                    table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
+                                                    start = start + len(table) + 3
+                                                    workbook = writer.book
+                                                    worksheet = writer.sheets[f"{demo}(col)"]
+
+                                                start_2 = 1
+                                                for q in q_ls:
+                                                    if q in multi:
+                                                        table_2 = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
+                                                    else:
+                                                        table_2 = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
+
+                                                    table_2.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start_2)
+                                                    start_2 = start_2 + len(table_2) + 3
+                                                    workbook = writer.book
+                                                    worksheet = writer.sheets[f"{demo}(row)"]
+                                            
+                                            elif wise == '% of Column Total':
+                                                start = 1
+                                                for q in q_ls:
+                                                    if q in multi:
+                                                        table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
+                                                    else:
+                                                        table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
+
+                                                    table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
+                                                    start = start + len(table) + 3
+                                                    workbook = writer.book
+                                                    worksheet = writer.sheets[f"{demo}(col)"]
+
+                                            else:
+                                                start = 1
+                                                for q in q_ls:
+                                                    if q in multi:
+                                                        table = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
+                                                    else:
+                                                        table = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
+
+                                                    table.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start)
+                                                    start = start + len(table) + 3
+                                                    workbook = writer.book
+                                                    worksheet = writer.sheets[f"{demo}(row)"]
+                                    
+                                    writer.save()
+                                    df_xlsx = output.getvalue()
+                                    df_name = df_name[:df_name.find('.')]
+                                    st.balloons()
+                                    st.header('Crosstabs ready for download!')
+                                    st.download_button(label='📥 Download', data=df_xlsx, file_name= df_name + '-crosstabs.xlsx')
+
+with tab2:
+    st.subheader("Upload Crosstab result in .xlsx format")
+    df_charts = st.file_uploader("Please ensure the file contains the crosstab tables prior to uploading.")
+    if df_charts:
+        df_chartsname = df_charts.name
+        # Read all sheet names in the Excel file
+        all_sheet_names = pd.ExcelFile(df_charts).sheet_names
+
+        # Exclude the first sheet (raw data)
+        sheet_names_to_read = all_sheet_names[1:]
+
+        # Rename sheets based on initial sheet names
+        sheet_names = [name for name in sheet_names_to_read]
+
+        # Read all tables from multiple sheets
+        dfs = []
+        for sheet_name in sheet_names_to_read:
+            df = pd.read_excel(df_charts, sheet_name=sheet_name, header=None)
+            dfs.append(df)
         
-        if len(demos) > 0:
-            # Ensure that all the demographic values have been selected before proceeding
-            score = 0
-            col_seqs = {}
-            for demo in demos:
-                st.subheader('Column: ' + demo)
-                col_seq = st.multiselect('Please arrange ALL values in order', list(df[demo].unique()), default=sorter(demo, df=df), key = demo)
-                col_seqs[demo] = col_seq
-                if len(col_seq) == df[demo].nunique():
-                    score += 1
+        # Create an output Excel workbook
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
-            if score == len(demos):
-                first = st.selectbox('Select the first question of the survey',[''] + list(df.columns))
-                if first != '':
-                    first_idx = list(df.columns).index(first)
-                    last = st.selectbox('Select the last question of the survey', [''] + list(df.columns)[first_idx + 1:])
-                    if last != '':
-                        last_idx = list(df.columns).index(last)
-                        st.subheader('Number of questions to build the crosstab on: ' + str(last_idx - first_idx + 1))
-                        q_ls = [df.columns[x] for x in range(first_idx, last_idx + 1)]
-                        wise_list = ['% of Column Total','% of Row Total', 'Both']
-                        wise = st.selectbox('Show values as:', [''] + wise_list)
-                        if wise != '':
-                            multi = st.multiselect('Choose mutiple answers question(s), if any', list(df.columns)[first_idx: last_idx + 1], col_search(df[first_idx: last_idx + 1], key="[MULTI]"))
-                            button = st.button('Generate Crosstabs')
-                            if button:
-                                with st.spinner('Building crosstabs...'):
-                                    # Initialize excel file
-                                    output = BytesIO()
-                                    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-                                    df.to_excel(writer, index=False, sheet_name= 'data')
+        # Process each table separately
+        for sheet_idx, (sheet_name, df) in enumerate(zip(sheet_names, dfs)):
+            worksheet = workbook.add_worksheet(sheet_name)
 
-                                    # Write tables one by one according to the type of question
-                                    for demo in demos:
-                                        if wise == 'Both':
-                                            start = 1
-                                            for q in q_ls:
-                                                if q in multi:
-                                                    table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
-                                                else:
-                                                    table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
+            larr = label(np.array(df.notnull()).astype("int"))
+            start_row = 0
+            for s in regionprops(larr):
+                sub_df = (df.iloc[s.bbox[0]:s.bbox[2], s.bbox[1]:s.bbox[3]].pipe(lambda df_: df_.rename(columns=df_.iloc[0]).drop(df_.index[0])))
+                
+                # Bold the column name
+                bold = workbook.add_format({'bold': 1})
+                # Write the sub_df to the worksheet
+                for i, col in enumerate(sub_df.columns):
+                    worksheet.write(start_row, i, col, bold)
+                    for j, value in enumerate(sub_df[col]):
+                        worksheet.write(start_row + j + 1, i, value)
+                
+                # Create clustered bar chart for the current table
+                create_chart(sub_df, (start_row, 0), worksheet)
 
-                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
-                                                start = start + len(table) + 3
-                                                workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(col)"]
+                # Add some empty rows between tables
+                start_row += sub_df.shape[0] + 3
+        
+        workbook.close()
+        df_charts = output.getvalue()
+        df_chartsname = df_chartsname[:df_chartsname.find('.')]
+        st.balloons()
+        st.header('Charts ready for download!')
+        st.download_button(label='📥 Download', data=df_charts, file_name= df_chartsname + '-charts.xlsx')
 
-                                            start_2 = 1
-                                            for q in q_ls:
-                                                if q in multi:
-                                                    table_2 = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
-                                                else:
-                                                    table_2 = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table_2.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start_2)
-                                                start_2 = start_2 + len(table_2) + 3
-                                                workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(row)"]
-                                        
-                                        elif wise == '% of Column Total':
-                                            start = 1
-                                            for q in q_ls:
-                                                if q in multi:
-                                                    table = multi_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
-                                                else:
-                                                    table = single_choice_crosstab_column(df, q, demo, value= weight, column_seq= col_seqs[demo])
 
-                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow = start)
-                                                start = start + len(table) + 3
-                                                workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(col)"]
-
-                                        else:
-                                            start = 1
-                                            for q in q_ls:
-                                                if q in multi:
-                                                    table = multi_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
-                                                else:
-                                                    table = single_choice_crosstab_row(df, q, demo, value= weight, column_seq= col_seqs[demo])
-
-                                                table.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow = start)
-                                                start = start + len(table) + 3
-                                                workbook = writer.book
-                                                worksheet = writer.sheets[f"{demo}(row)"]
-                                
-                                writer.save()
-                                df_xlsx = output.getvalue()
-                                df_name = df_name[:df_name.find('.')]
-                                st.balloons()
-                                st.header('Crosstabs ready for download!')
-                                st.download_button(label='📥 Download', data=df_xlsx, file_name= df_name + '-crosstabs.xlsx')
