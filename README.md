@@ -21,7 +21,7 @@ This project aims to expedite our crosstab generation process from long minutes 
    Project documentation
 3. **generator.py** <br />
    Project code
-4. **invoke_logo.jpg** <br />
+4. **invoke_logo.png** <br />
    Invoke logo to be imported into generator.py
 5. **requirements.txt** <br />
    List of the libraries and their respected versions required for the project
@@ -32,14 +32,17 @@ This project aims to expedite our crosstab generation process from long minutes 
 
 **1. Pre-selection on:**
    * Weight column. Automatically select the weight column if detected
-   * 5 basic demographic columns. Automatically select agegroup, gender, ethgroup, incomegroup and urbanity
+   * 5 basic demographic columns. Automatically select age group, gender, ethnicity group, income group and urbanity
      columns if detected
    * Multiple answer questions. Automatically detect columns with keyword=[MULTI]
      
 **2. Automatic Column Sequence in Malay and English:**
-   * gender - sort from Male to Female/M to F/Lelaki to Perempuan/L to P
-   * agegroup - sort from A-Z (ascending order)
-   * ethgroup - sort in the following sequence (Malay, Chinese, Indian, Bumiputera or Others) or (Melayu, Cina, India, Bumiputera or Lain-Lain)
+   * Gender - sort from Male to Female/M to F/Lelaki to Perempuan/L to P
+   * Age group - sort from A-Z (ascending order)
+   * Ethnicity group - sort in the following sequence (Malay, Chinese, Indian, Bumiputera or Others) or (Melayu, Cina, India, Bumiputera or Lain-Lain)
+
+**3. Automatic Generate Clustered Bar Chart based on the Crosstab Tables:**
+   * Automation of the clustered bar chart creation in reference to the generated crosstab table. 
 
 ### ⚠ Attention
 
@@ -48,11 +51,9 @@ This project aims to expedite our crosstab generation process from long minutes 
 
 **Under development ideas:**
 
-**1. Automation of clustered bar chart creation:**
-*  Automate the creation of the clustered bar chart in reference to the generated crosstab table. 
+**1. Modularize all functions:**
+* [ ]  Refactor and modularize the script. 
 
-**2. Modularize all functions:**
-   
 ### Built With
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/)
@@ -136,3 +137,10 @@ Once you have met all of the prerequisites and completed the installations, you 
     ```
     git push
     ```
+
+### Acknowledgement
+* [Amer Wafiy - Original Author](https://github.com/amerwafiy)
+* [Zabir Azreen - Crosstabs V2](https://github.com/zabirazreen/crosstabs)
+* [Sim Lin Zheng - Tablo](https://github.com/linzheng1009/Tablo)
+* [Safwan Shamsir - Crosstab V3](https://github.com/safwanshamsir99)
+
