@@ -3,8 +3,6 @@ import pandas as pd
 from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 from PIL import Image
-import numpy as np
-from skimage.measure import label, regionprops
 import xlsxwriter
 from utils_module.utils import load, demography, col_search, sorter, get_row, get_column
 from chart_module.chart import load_chart, crosstab_reader
@@ -98,7 +96,8 @@ with tab1:
 with tab2:
     st.subheader("Upload Crosstab result in .xlsx format only")
     try:
-        df_charts = st.file_uploader("Please ensure the file contains the **CROSSTAB TABLE**:heavy_exclamation_mark::heavy_exclamation_mark: prior to uploading.")
+        st.warning("Please ensure the file contains the **CROSSTAB TABLE**:heavy_exclamation_mark::heavy_exclamation_mark: prior to uploading.", icon="❗")
+        df_charts = st.file_uploader("Upload the file here:")
 
         if df_charts:
             df_chartsname = df_charts.name
@@ -110,7 +109,7 @@ with tab2:
 
             # Process each table separately
             for sheet_idx, (sheet_name, df) in enumerate(zip(sheet_names, dfs)):
-                workbook, charts = crosstab_reader(df, sheet_name)
+                workbook, charts = crosstab_reader(workbook, df, sheet_name)
             
             workbook.close()
             df_charts = output.getvalue()
@@ -120,7 +119,7 @@ with tab2:
             st.download_button(label='📥 Download', data=df_charts, file_name= df_chartsname + '-charts.xlsx')
 
     except:
-        st.warning('The file should contain the crosstab tables!', icon="🚨")
+        st.error('The file should contain the crosstab tables!', icon="🚨")
 
 
 

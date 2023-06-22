@@ -4,11 +4,17 @@ import xlsxwriter
 from io import BytesIO
 import pandas as pd
 import numpy as np
+from typing import Any
 
 def __init__(self):
     pass
 
-def load_chart(df_charts):
+def load_chart(df_charts:pd.DataFrame)->tuple[list[pd.DataFrame],list]:
+    '''
+    A function to read and load the streamlit dataframe into pandas dataframe.
+
+    df_charts: Whole dataframe [streamlit dataframe]
+    '''
     df_chartsname = df_charts.name
     # Read all sheet names in the Excel file
     all_sheet_names = pd.ExcelFile(df_charts).sheet_names
@@ -27,7 +33,16 @@ def load_chart(df_charts):
     
     return dfs, sheet_names
 
-def bar_chart(df, start, workbook, worksheet):
+def bar_chart(df:pd.DataFrame, start:int, workbook:pd.ExcelWriter, worksheet:pd.ExcelWriter)->Any:
+    '''
+    Generate the clustered bar chart based on the crosstab table.
+
+    df: Whole dataframe [pandas dataframe]
+    start: Row's number to start the loop [int]
+    workbook: Excel workbook [pandas ExcelWriter]
+    worksheet: Sheet in the Excel workbook [pandas ExcelWriter]
+    '''
+
     # Create a bar chart object
     chart = workbook.add_chart({'type': 'bar'})
     chart.set_style(11)
@@ -51,9 +66,15 @@ def bar_chart(df, start, workbook, worksheet):
     # Insert the chart into the worksheet
     worksheet.insert_chart(start[0] + df_no_total.shape[0] + 2, start[1] + df_no_total.shape[1] + 2, chart)
 
-def crosstab_reader(df, sheet_name):
-    output = BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+def crosstab_reader(workbook:pd.ExcelWriter, df:pd.DataFrame, sheet_name:list[str])->tuple[pd.ExcelWriter, list[pd.ExcelWriter]]:
+    '''
+    Read multiple crosstab tables in multiple Excel worksheets. 
+
+    workbook: Excel workbook [pandas ExcelWriter]
+    df: Whole dataframe [pandas dataframe]
+    sheet_name: Name of the sheets to read [list]
+    '''
+
     worksheet = workbook.add_worksheet(sheet_name)
 
     larr = label(np.array(df.notnull()).astype("int"))

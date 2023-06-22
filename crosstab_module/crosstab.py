@@ -7,7 +7,7 @@ import numpy as np
 def __init__(self):
     pass
 
-def single_choice_crosstab_column(df, q, column=None, value='weight', column_seq=None, row_seq=None):
+def single_choice_crosstab_column(df:pd.DataFrame, q:str, column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for single choice questions (column wise).
 
@@ -76,7 +76,7 @@ def single_choice_crosstab_column(df, q, column=None, value='weight', column_seq
     return df_ct
 
 
-def single_choice_crosstab_row(df, q, column=None, value='weight', column_seq=None, row_seq=None):
+def single_choice_crosstab_row(df:pd.DataFrame, q:str, column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for single choice questions (row wise).
 
@@ -115,7 +115,7 @@ def single_choice_crosstab_row(df, q, column=None, value='weight', column_seq=No
     return df_ct
 
 
-def multi_choice_crosstab_column(df, q, column, value='weight', column_seq=None):
+def multi_choice_crosstab_column(df:pd.DataFrame, q:str, column:str, value:int='weight', column_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for multi choice questions (column wise).
 
@@ -182,7 +182,7 @@ def multi_choice_crosstab_column(df, q, column, value='weight', column_seq=None)
     return result
 
 
-def multi_choice_crosstab_row(df, q, column, value='weight', column_seq=None):
+def multi_choice_crosstab_row(df:pd.DataFrame, q:str, column:str, value:int='weight', column_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for multi choice questions (row wise).
 
