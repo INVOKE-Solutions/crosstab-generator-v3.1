@@ -44,15 +44,22 @@ This project aims to expedite our crosstab generation process from long minutes 
 **3. Automatic Generate Clustered Bar Chart based on the Crosstab Tables:**
    * Automation of the clustered bar chart creation in reference to the generated crosstab table. 
 
+**4. Modularize the function:**
+   * Tidy up the functions for the crosstab and chart generator by putting in different modules. 
+
+
 ### ⚠ Attention
 
 1. Before uploading your Excel file, make sure that the demographic column name characters is less than 10 chars. Exceeding chars will lead to error due to Excel formatting. 
 2. On _Select column weight_ section choice, `Unweighted` choice has some unsettled bugs. Hence, if your dataset is _Unweighted_, create one extra column name *weight* with all value 1. Then choose this column name for this part.
 
-**Under development ideas:**
+**Feedbacks for future development ideas:**
 
-**1. Modularize all functions:**
-* [ ]  Refactor and modularize the script. 
+**1. Add chart options for user to choose:**
+* [ ]  Add new charts features such as pie chart. 
+
+**2. Add new demography in the demography sorter function for automation:**
+* [ ]  State demography.
 
 ### Built With
 
