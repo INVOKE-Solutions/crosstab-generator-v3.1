@@ -18,7 +18,7 @@ hide_st_style = """
 
 # configure the default settings of the page.
 icon = Image.open('photos/invoke_icon.jpg')
-st.set_page_config(layout='wide', page_icon=icon, initial_sidebar_state='expanded')
+st.set_page_config(page_icon=icon)
 
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
