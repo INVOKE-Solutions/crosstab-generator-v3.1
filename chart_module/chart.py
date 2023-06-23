@@ -1,7 +1,4 @@
-from pyxlsb import open_workbook as open_xlsb
 from skimage.measure import label, regionprops
-import xlsxwriter
-from io import BytesIO
 import pandas as pd
 import numpy as np
 from typing import Any

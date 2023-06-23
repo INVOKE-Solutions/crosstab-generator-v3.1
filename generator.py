@@ -16,9 +16,13 @@ hide_st_style = """
             </style>
             """
 
+# configure the default settings of the page.
+icon = Image.open('photos/invoke_icon.jpg')
+st.set_page_config(layout='wide', page_icon=icon, initial_sidebar_state='expanded')
+
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-image = Image.open('invoke_logo.png')
+image = Image.open('photos/invoke_logo.png')
 st.title('Crosstabs Generator')
 st.image(image)
 tab1, tab2 = st.tabs(["Crosstab Generator","Chart Generator"])
