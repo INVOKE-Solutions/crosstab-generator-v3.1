@@ -48,7 +48,7 @@ def bar_chart(df:pd.DataFrame, start:int, workbook:pd.ExcelWriter, worksheet:pd.
     df_no_total = df[df.iloc[:, 0] != 'Grand Total']
 
     # Add data series to the chart
-    for i in range(1, df_no_total.shape[1] - 1):  # Exclude the last column
+    for i in range(1, df_no_total.shape[1]):  # Exclude the last column
         if df_no_total.columns[i] != 'Grand Total':  # Exclude column with name 'Grand Total'
             chart.add_series({
                 'name': [worksheet.name, start[0], start[1] + i],
