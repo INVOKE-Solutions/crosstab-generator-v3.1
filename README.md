@@ -21,10 +21,16 @@ This project aims to expedite our crosstab generation process from long minutes 
    Project documentation
 3. **generator.py** <br />
    Project code
-4. **invoke_logo.png** <br />
-   Invoke logo to be imported into generator.py
+4. **photos** <br />
+   Contains INVOKE Analytics logo and INVOKE logo to be imported into generator.py
 5. **requirements.txt** <br />
-   List of the libraries and their respected versions required for the project
+   List of the libraries and their respective versions required for the project
+6. **crosstab_module** <br />
+Contains all of the main functions to create the crosstabs.
+7. **utils_module** <br />
+Contains all of the functions to automate the crosstabs generation process.
+8. **chart_module** <br />
+Contains all of the functions to create the clustered bar charts. 
 
 ### Progress
 
