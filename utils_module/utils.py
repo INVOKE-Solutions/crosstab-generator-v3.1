@@ -2,17 +2,14 @@
 import pandas as pd
 import re
 from typing import Any
-from crosstab_module.crosstab import single_choice_crosstab_column, single_choice_crosstab_row
-from crosstab_module.crosstab import multi_choice_crosstab_column, multi_choice_crosstab_row
-
-def __init__(self):
-    pass
 
 def load(df:pd.DataFrame)->pd.DataFrame:
     '''
     A function to read and load the streamlit dataframe into pandas dataframe.
 
     df: Whole dataframe [streamlit dataframe]
+
+    Return a dataframe
     '''
     df_name = df.name
 
@@ -29,6 +26,8 @@ def demography(df:pd.DataFrame)->list:
     A function to autoselect the demography columns. 
 
     df: Whole dataframe [pandas dataframe]
+
+    Return a list
     '''
     default_demo = ['age', 'gender', 'eth', 'income', 'urban']
     data_list = list(df.columns)
@@ -43,6 +42,8 @@ def col_search(df:pd.DataFrame, key:str)->list:
 
     df: Whole dataframe [pandas dataframe]
     key: keyword to match [str]
+
+    Return a list
     '''
     columns_with_string = []
 
@@ -59,6 +60,8 @@ def sorter(demo:str, df:pd.DataFrame)->Any:
 
     demo: Column name of the demography you're building the table on [str]
     df: Whole dataframe [pandas dataframe]
+
+    Return a sorted list of unique values from specific column in the dataframe
     '''
     if re.search(r'age', demo, re.IGNORECASE):
         return sorted(list(df[demo].unique()))
@@ -85,52 +88,17 @@ def sorter(demo:str, df:pd.DataFrame)->Any:
                                      1 if re.match(r'^S', x) else
                                      2 if re.match(r'^R|^L', x) else 3))
     
-def get_column(df:pd.DataFrame, q:str, multi:list[str], demo:str, weight:str, col_seqs:list[list[str]], writer:pd.ExcelWriter, start:int)->tuple[int,pd.ExcelWriter,pd.ExcelWriter]:
+def sort_order(df:pd.DataFrame, sorting:list[str])->pd.DataFrame:
     '''
-    Generate the crosstab tables per column values using the multi_choice_crosstab_column function and single_choice_crosstab_column.
+    A function to sort the order of crosstabs table based on the column selected by the user,
 
     df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    multi: Question that has multiple choice answer [str]
-    demo: Item in the for loop function [str]
-    weight: Weight that you want to use to build the crosstab table [str]
-    col_seqs: Order of demographic sequence [list]
-    writer: Engine to write the Excel sheet
-    start: Number to loop [int]
+    sorting: keyword to match [str]
+
+    Return a dataframe
     '''
-    if q in multi:
-        table = multi_choice_crosstab_column(df, q, demo, value=weight, column_seq=col_seqs[demo])
+    if df.columns[0] in sorting:
+        return df[:-1].sort_values(df.columns[0])
     else:
-        table = single_choice_crosstab_column(df, q, demo, value=weight, column_seq=col_seqs[demo])
+        return df[:-1].sort_values('Grand Total', ascending = False)
 
-    table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow=start)
-    start = start + len(table) + 3
-    workbook = writer.book
-    worksheet = writer.sheets[f"{demo}(col)"]
-    
-    return start, workbook, worksheet
-
-def get_row(df:pd.DataFrame, q:str, multi:list[str], demo:str, weight:str, col_seqs:list[list[str]], writer:pd.ExcelWriter, start_2:int)->tuple[int,pd.ExcelWriter,pd.ExcelWriter]:
-    '''
-    Generate the crosstab tables per column values using the multi_choice_crosstab_column function and single_choice_crosstab_column.
-
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    multi: Question that has multiple choice answer [str]
-    demo: Item in the for loop function [str]
-    weight: Weight that you want to use to build the crosstab table [str]
-    col_seqs: Order of demographic sequence [list]
-    writer: Engine to write the Excel sheet
-    start: Number to loop [int]
-    '''
-    if q in multi:
-        table_2 = multi_choice_crosstab_row(df, q, demo, value=weight, column_seq=col_seqs[demo])
-    else:
-        table_2 = single_choice_crosstab_row(df, q, demo, value=weight, column_seq=col_seqs[demo])
-
-    table_2.to_excel(writer, index=False, sheet_name=f"{demo}(row)", startrow=start_2)
-    start_2 = start_2 + len(table_2) + 3
-    workbook = writer.book
-    worksheet = writer.sheets[f"{demo}(row)"]
-
-    return start_2, workbook, worksheet

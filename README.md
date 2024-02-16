@@ -102,7 +102,7 @@ If you are working on this project, simply follow the guide below.
 
 Once you have met all of the prerequisites and completed the installations, you can now start working on the project. 
 
-1. Firstly, fork this repository. Make sure the owner of the repository is INVOKE-Analytics.
+1. Firstly, fork this repository. Make sure the owner of the repository is INVOKE-Solutions.
 
 2. Create a new folder on your local computer.
 
