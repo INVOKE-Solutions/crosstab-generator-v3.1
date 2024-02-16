@@ -4,7 +4,8 @@ from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 from PIL import Image
 import xlsxwriter
-from utils_module.utils import load, demography, col_search, sorter, get_row, get_column
+from utils_module.utils import load, demography, col_search, sorter
+from utils_module.processor import get_row, get_column
 from chart_module.chart import load_chart, crosstab_reader
 
 # Hide streamlit header and footer
@@ -55,6 +56,7 @@ with tab1:
                         last = st.selectbox('Select the last question of the survey', [''] + list(df.columns)[first_idx + 1:])
                         if last != '':
                             last_idx = list(df.columns).index(last)
+                            name_sort = st.multiselect('Choose question(s) to sort by name, if any', list(df.columns)[first_idx: last_idx + 1])
                             st.subheader('Number of questions to build the crosstab on: ' + str(last_idx - first_idx + 1))
                             q_ls = [df.columns[x] for x in range(first_idx, last_idx + 1)]
                             wise_list = ['% of Column Total','% of Row Total', 'Both']
@@ -74,21 +76,21 @@ with tab1:
                                             if wise == 'Both':
                                                 start = 1
                                                 for q in q_ls:
-                                                    start, workbook, worksheet = get_column(df, q, multi, demo, weight, col_seqs, writer, start)
+                                                    start, workbook, worksheet = get_column(df=df, q=q, multi=multi, name_sort=name_sort, demo=demo, weight=weight, col_seqs=col_seqs, writer=writer, start=start)
 
                                                 start_2 = 1
                                                 for q in q_ls:
-                                                    start_2, workbook, worksheet = get_row(df, q, multi, demo, weight, col_seqs, writer, start_2)
+                                                    start_2, workbook, worksheet = get_row(df, q, multi, name_sort, demo, weight, col_seqs, writer, start_2)
                                             
                                             elif wise == '% of Column Total':
                                                 start = 1
                                                 for q in q_ls:
-                                                    start, workbook, worksheet = get_column(df, q, multi, demo, weight, col_seqs, writer, start)
+                                                    start, workbook, worksheet = get_column(df, q, multi, name_sort, demo, weight, col_seqs, writer, start)
 
                                             else:
                                                 start_2 = 1
                                                 for q in q_ls:
-                                                    start_2, workbook, worksheet = get_row(df, q, multi, demo, weight, col_seqs, writer, start_2)
+                                                    start_2, workbook, worksheet = get_row(df, q, multi, name_sort, demo, weight, col_seqs, writer, start_2)
                                     
                                     writer.save()
                                     df_xlsx = output.getvalue()
@@ -124,6 +126,3 @@ with tab2:
 
     except:
         st.error('The file should contain the crosstab tables!', icon="🚨")
-
-
-

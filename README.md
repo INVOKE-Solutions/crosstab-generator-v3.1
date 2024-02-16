@@ -28,9 +28,32 @@ This project aims to expedite our crosstab generation process from long minutes 
 6. **crosstab_module** <br />
 Contains all of the main functions to create the crosstabs.
 7. **utils_module** <br />
-Contains all of the functions to automate the crosstabs generation process.
+Contains all of the helper functions for the crosstabs generator. Also, contains the processor functions that call functions from crosstab.py and utils.py
 8. **chart_module** <br />
 Contains all of the functions to create the clustered bar charts. 
+
+### Folder Structure
+
+```
+.
+├── README.md
+├── .streamlit/
+│   └── config.toml
+├── .github/
+│   └── dependabot.yml
+├── chart_module/
+│   └── chart.py
+├── crosstab_module/
+│   └── crosstab.py
+├── photos/
+│   ├── invoke_icon.jpg
+│   └── invoke_logo.png
+├── utils_module/
+│   ├── processor.py
+│   └── utils.py
+├── generator.py
+└── requirements.txt
+```
 
 ### Progress
 
@@ -51,7 +74,10 @@ Contains all of the functions to create the clustered bar charts.
    * Automation of the clustered bar chart creation in reference to the generated crosstab table. 
 
 **4. Modularize the function:**
-   * Tidy up the functions for the crosstab and chart generator by putting in different modules. 
+   * Tidy up the functions for the crosstab and chart generator by putting in different modules.
+
+**5. Sort the order of crosstabs table:**
+   * User can choose which column to sort by name [default sorting option is sorting by value].
 
 
 ### ⚠ Attention
@@ -66,6 +92,9 @@ Contains all of the functions to create the clustered bar charts.
 
 **2. Add new demography in the demography sorter function for automation:**
 * [ ]  State demography.
+ 
+**3. Combine of survey weighting platform and crosstabs generator:**
+* [ ]  Create APIs for crosstabs geerator and survey weighting platform.
 
 ### Built With
 
@@ -102,7 +131,7 @@ If you are working on this project, simply follow the guide below.
 
 Once you have met all of the prerequisites and completed the installations, you can now start working on the project. 
 
-1. Firstly, fork this repository. Make sure the owner of the repository is INVOKE-Analytics.
+1. Firstly, fork this repository. Make sure the owner of the repository is INVOKE-Solutions.
 
 2. Create a new folder on your local computer.
 

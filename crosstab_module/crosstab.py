@@ -1,11 +1,8 @@
 import pandas as pd
 import numpy as np
+from utils_module.utils import sort_order
 
-
-def __init__(self):
-    pass
-
-def single_choice_crosstab_column(df:pd.DataFrame, q:str, column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
+def single_choice_crosstab_column(df:pd.DataFrame, q:str, sorting:list[str], column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for single choice questions (column wise).
 
@@ -15,6 +12,8 @@ def single_choice_crosstab_column(df:pd.DataFrame, q:str, column:str=None, value
     value: Column name of your weights [str]
     column_seq: Order of demographic sequence [list]
     row_seq: Order of answer sequence [list]
+
+    Return a dataframe
     '''
 
     if row_seq != None:
@@ -70,11 +69,11 @@ def single_choice_crosstab_column(df:pd.DataFrame, q:str, column:str=None, value
         df_ct[demo] = temp # Add new column to the data frame and input the values
 
     if row_seq == None:
-        df_ct = pd.concat([df_ct[:-1].sort_values(df_ct.columns[0]), df_ct[-1:]])
+        df_ct = pd.concat([sort_order(df=df_ct, sorting=sorting), df_ct[-1:]])
     return df_ct
 
 
-def single_choice_crosstab_row(df:pd.DataFrame, q:str, column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
+def single_choice_crosstab_row(df:pd.DataFrame, q:str, sorting:list[str], column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
     '''
     Create a table for single choice questions (row wise).
 
@@ -84,6 +83,8 @@ def single_choice_crosstab_row(df:pd.DataFrame, q:str, column:str=None, value:in
     value: Column name of your weights [str]
     column_seq: Order of demographic sequence [list]
     row_seq: Order of answer sequence [list]
+
+    Return a dataframe
     '''
     if row_seq != None:
         row_list = row_seq + ["Grand Total"]
@@ -110,6 +111,8 @@ def single_choice_crosstab_row(df:pd.DataFrame, q:str, column:str=None, value:in
 
         df_ct[demo] = temp # Add new column to the data frame and input the values
 
+    if row_seq == None:
+        df_ct = pd.concat([sort_order(df=df_ct, sorting=sorting), df_ct[-1:]])
     return df_ct
 
 
@@ -123,6 +126,8 @@ def multi_choice_crosstab_column(df:pd.DataFrame, q:str, column:str, value:int='
     value: Column name of your weights [str]
     column_seq: Order of demographic sequence [list]
     row_seq: Order of answer sequence [list]
+
+    Return a dataframe
     '''
 
     if column_seq != None:
@@ -190,6 +195,8 @@ def multi_choice_crosstab_row(df:pd.DataFrame, q:str, column:str, value:int='wei
     value: Column name of your weights [str]
     column_seq: Order of demographic sequence [list]
     row_seq: Order of answer sequence [list]
+
+    Return a dataframe
     '''
 
     if column_seq != None:
