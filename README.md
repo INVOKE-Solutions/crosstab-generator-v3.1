@@ -33,7 +33,8 @@ Contains all of the helper functions for the crosstabs generator. Also, contains
 Contains all of the functions to create the clustered bar charts. 
 
 ### Folder Structure
-'''
+
+```
 .
 ├── README.md
 ├── .streamlit/
@@ -52,7 +53,7 @@ Contains all of the functions to create the clustered bar charts.
 │   └── utils.py
 ├── generator.py
 └── requirements.txt
-'''
+```
 
 ### Progress
 
@@ -63,7 +64,6 @@ Contains all of the functions to create the clustered bar charts.
    * 5 basic demographic columns. Automatically select age group, gender, ethnicity group, income group and urbanity
      columns if detected
    * Multiple answer questions. Automatically detect columns with keyword=[MULTI]
-   * Sort the order of crosstabs table. User can choose which column to sort by name [default=sort by value]
      
 **2. Automatic Column Sequence in Malay and English:**
    * Gender - sort from Male to Female/M to F/Lelaki to Perempuan/L to P
@@ -76,8 +76,8 @@ Contains all of the functions to create the clustered bar charts.
 **4. Modularize the function:**
    * Tidy up the functions for the crosstab and chart generator by putting in different modules.
 
-**5. Modularize the function:**
-   * Tidy up the functions for the crosstab and chart generator by putting in different modules.
+**5. Sort the order of crosstabs table:**
+   * User can choose which column to sort by name [default sorting option is sorting by value].
 
 
 ### ⚠ Attention
