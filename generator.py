@@ -56,7 +56,7 @@ with tab1:
                         last = st.selectbox('Select the last question of the survey', [''] + list(df.columns)[first_idx + 1:])
                         if last != '':
                             last_idx = list(df.columns).index(last)
-                            name_sort = st.multiselect('Choose question(s) to sort by name, if any', list(df.columns)[first_idx: last_idx + 1])
+                            name_sort = st.multiselect('Choose question(s) to sort by name, if any [default: sort by value]', list(df.columns)[first_idx: last_idx + 1])
                             st.subheader('Number of questions to build the crosstab on: ' + str(last_idx - first_idx + 1))
                             q_ls = [df.columns[x] for x in range(first_idx, last_idx + 1)]
                             wise_list = ['% of Column Total','% of Row Total', 'Both']
