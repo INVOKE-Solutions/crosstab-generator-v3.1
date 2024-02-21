@@ -64,6 +64,7 @@ Contains all of the functions to create the clustered bar charts.
    * 5 basic demographic columns. Automatically select age group, gender, ethnicity group, income group and urbanity
      columns if detected
    * Multiple answer questions. Automatically detect columns with keyword=[MULTI]
+   * Column to sort by name. Automatically detect columns with keyword=[LIKERT]
      
 **2. Automatic Column Sequence in Malay and English:**
    * Gender - sort from Male to Female/M to F/Lelaki to Perempuan/L to P
