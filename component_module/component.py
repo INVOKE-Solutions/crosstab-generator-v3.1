@@ -2,7 +2,9 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 from utils_module.utils import load, demography, col_search, sorter
+from chart_module.chart import load_chart
 from component_module.table import write_table
+from component_module.viz import draw_chart
 
 
 def page_style():
@@ -27,15 +29,17 @@ def page_tabs()->object:
     tab1, tab2 = st.tabs(["Crosstab Generator","Chart Generator"])
     return tab1, tab2
 
-def upload_file()->tuple[pd.DataFrame, object]:
+def upload_file()->pd.DataFrame:
     st.subheader("Upload Survey responses (csv/xlsx)")
     df = st.file_uploader(
         "Please ensure the data are cleaned and weighted (if need to be) prior to uploading."
         )
-    if df:
-        df_name = df.name
-        df = load(df)
-        return df, df_name
+    return df
+    
+def read_file(df:pd.DataFrame)->tuple[pd.DataFrame,str]:
+    df_name = df.name
+    df = load(df)
+    return df, df_name
 
 def weight_selection(df: pd.DataFrame)->str:
     weight = st.selectbox(
@@ -68,21 +72,25 @@ def demo_sorter(df:pd.DataFrame, demos:list[str])->tuple[int,dict]:
             score += 1
     return score, col_seqs
 
-def question_selection(df:pd.DataFrame)->tuple[int,int]:
+def q1_selection(df:pd.DataFrame)->str:
     first = st.selectbox(
         "Select the first question of the survey",
         [''] + list(df.columns)
         )
-    if first != '':
-        first_idx = list(df.columns).index(first)
-        last = st.selectbox(
+    return first
+
+def qlast_selection(df:pd.DataFrame, first:str)->tuple[int,str]:
+    first_idx = list(df.columns).index(first)
+    last = st.selectbox(
             "Select the last question of the survey", 
             [''] + list(df.columns)[first_idx + 1:]
             )
-        if last != '':
-            last_idx = list(df.columns).index(last)
-            return first_idx, last_idx
-        
+    return first_idx, last
+
+def qlast_index(df:pd.DataFrame, last:str)->int:
+    last_idx = list(df.columns).index(last)
+    return last_idx
+
 def sort_col_by_name(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
     name_sort = st.multiselect(
         "Choose question(s) to sort by name, if any [default: sort by value]", 
@@ -118,51 +126,97 @@ def get_multi_answer(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
     return multi
 
 def crossgen_tab():
-    df, df_name = upload_file()
+    df = upload_file()
     if df:
-        weight = weight_selection(df)
+        df, df_name = read_file(df=df)
+        weight = weight_selection(df=df)
         if weight != '':
-            demos = demography_selection(df)
+            demos = demography_selection(df=df)
             if len(demos) > 0:
-                score, col_seqs = demo_sorter(df, demos)
+                score, col_seqs = demo_sorter(df=df, demos=demos)
                 if score == len(demos):
-                    first_idx, last_idx = question_selection(df)
-                    if last_idx != '':
-                        name_sort = sort_col_by_name(
-                            df=df,
-                            first_idx=first_idx,
-                            last_idx=last_idx
-                            )
-                        num_question(
-                            df=df,
-                            first_idx=first_idx,
-                            last_idx=last_idx
-                            )
-                        q_ls = question_list(
-                            df=df,
-                            first_idx=first_idx,
-                            last_idx=last_idx
-                            )
-                        wise = wise_list()
-                        if wise != '':
-                            multi = get_multi_answer(
-                                df=df,
-                                first_idx=first_idx,
-                                last_idx=last_idx
-                                )
-                            button = st.button('Generate Crosstabs')
-                            if button:
-                                df_xlsx = write_table(
+                    first = q1_selection(df=df)
+                    if first != '':
+                        first_idx, last = qlast_selection(df=df, first=first)
+                        if last != '':
+                            last_idx = qlast_index(df=df, last=last)
+                            if last_idx != '':
+                                name_sort = sort_col_by_name(
                                     df=df,
-                                    demos=demos,
-                                    wise=wise,
-                                    q_ls=q_ls,
-                                    multi=multi,
-                                    name_sort=name_sort,
-                                    weight=weight,
-                                    col_seqs=col_seqs
+                                    first_idx=first_idx,
+                                    last_idx=last_idx
                                     )
-                                df_name = df_name[:df_name.find('.')]
-                                st.balloons()
-                                st.header('Crosstabs ready for download!')
-                                st.download_button(label='📥 Download', data=df_xlsx, file_name= df_name + '-crosstabs.xlsx')
+                                num_question(
+                                    first_idx=first_idx,
+                                    last_idx=last_idx
+                                    )
+                                q_ls = question_list(
+                                    df=df,
+                                    first_idx=first_idx,
+                                    last_idx=last_idx
+                                    )
+                                wise = wise_list()
+                                if wise != '':
+                                    multi = get_multi_answer(
+                                        df=df,
+                                        first_idx=first_idx,
+                                        last_idx=last_idx
+                                        )
+                                    button = st.button('Generate Crosstabs')
+                                    if button:
+                                        df_xlsx = write_table(
+                                            df=df,
+                                            demos=demos,
+                                            wise=wise,
+                                            q_ls=q_ls,
+                                            multi=multi,
+                                            name_sort=name_sort,
+                                            weight=weight,
+                                            col_seqs=col_seqs
+                                            )
+                                        df_name = df_name[:df_name.find('.')]
+                                        st.balloons()
+                                        st.header('Crosstabs ready for download!')
+                                        st.download_button(
+                                            label='📥 Download', 
+                                            data=df_xlsx, 
+                                            file_name= df_name + '-crosstabs.xlsx'
+                                            )
+                                        
+#--------------------Component for Chart Generator-------------------
+def issue_warning()->st.subheader:
+    st.subheader(
+        "Upload Crosstab result in .xlsx format only"
+    )
+
+def upload_crosstabs()->pd.DataFrame:
+    st.warning(
+        "Please ensure the file contains the **CROSSTAB TABLE**:heavy_exclamation_mark::heavy_exclamation_mark: prior to uploading.", 
+        icon="❗"
+        )
+    df_charts = st.file_uploader("Upload the file here:")
+    return df_charts
+
+def error_warning()->st.error:
+    st.error(
+        "The file should contain the crosstab tables!", 
+        icon="🚨"
+        )
+
+def chart_gen():
+    issue_warning()
+    try:
+        df_charts = upload_crosstabs()
+        if df_charts:
+            dfs, sheet_names, df_chartsname = load_chart(df_charts=df_charts)
+            df_charts = draw_chart(dfs=dfs, sheet_names=sheet_names)
+            df_chartsname = df_chartsname[:df_chartsname.find('.')]
+            st.balloons()
+            st.header("Charts ready for download!")
+            st.download_button(
+                label='📥 Download', 
+                data=df_charts, 
+                file_name= df_chartsname + '-charts.xlsx'
+                )
+    except:
+        error_warning()

@@ -6,7 +6,7 @@ from typing import Any
 def __init__(self):
     pass
 
-def load_chart(df_charts:pd.DataFrame)->tuple[list[pd.DataFrame],list]:
+def load_chart(df_charts:pd.DataFrame)->tuple[list[pd.DataFrame],list,str]:
     '''
     A function to read and load the streamlit dataframe into pandas dataframe.
 
@@ -28,7 +28,7 @@ def load_chart(df_charts:pd.DataFrame)->tuple[list[pd.DataFrame],list]:
         df = pd.read_excel(df_charts, sheet_name=sheet_name, header=None)
         dfs.append(df)
     
-    return dfs, sheet_names
+    return dfs, sheet_names, df_chartsname
 
 def bar_chart(df:pd.DataFrame, start:int, workbook:pd.ExcelWriter, worksheet:pd.ExcelWriter)->Any:
     '''
