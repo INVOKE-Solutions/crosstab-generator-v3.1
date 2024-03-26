@@ -31,6 +31,8 @@ Contains all of the main functions to create the crosstabs.
 Contains all of the helper functions for the crosstabs generator. Also, contains the processor functions that call functions from crosstab.py and utils.py
 8. **chart_module** <br />
 Contains all of the functions to create the clustered bar charts. 
+9. **component_module** <br />
+Contains all of the components; front-end component for streamlit and back-end component for crosstabs and charts. 
 
 ### Folder Structure
 
@@ -45,6 +47,10 @@ Contains all of the functions to create the clustered bar charts.
 │   └── chart.py
 ├── crosstab_module/
 │   └── crosstab.py
+├── component_module/
+│   └── component.py
+│   └── table.py
+│   └── viz.py
 ├── photos/
 │   ├── invoke_icon.jpg
 │   └── invoke_logo.png

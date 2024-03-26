@@ -2,18 +2,29 @@ import pandas as pd
 import numpy as np
 from utils_module.utils import sort_order
 
-def single_choice_crosstab_column(df:pd.DataFrame, q:str, sorting:list[str], column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
+def single_choice_crosstab_column(
+        df:pd.DataFrame, 
+        q:str, 
+        sorting:list[str], 
+        column:str=None, 
+        value:int='weight', 
+        column_seq:list[str]=None, 
+        row_seq:list[str]=None
+        )->pd.DataFrame:
     '''
     Create a table for single choice questions (column wise).
+    This script serves as the base script for the back-end of the crosstabs generator.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
-    value: Column name of your weights [str]
-    column_seq: Order of demographic sequence [list]
-    row_seq: Order of answer sequence [list]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
+        - value: Column name of your weights [str]
+        - column_seq: Order of demographic sequence [list]
+        - row_seq: Order of answer sequence [list]
 
-    Return a dataframe
+    Return:
+        - df_ct: pandas dataframe with crosstabs table. 
     '''
 
     if row_seq != None:
@@ -73,18 +84,29 @@ def single_choice_crosstab_column(df:pd.DataFrame, q:str, sorting:list[str], col
     return df_ct
 
 
-def single_choice_crosstab_row(df:pd.DataFrame, q:str, sorting:list[str], column:str=None, value:int='weight', column_seq:list[str]=None, row_seq:list[str]=None)->pd.DataFrame:
+def single_choice_crosstab_row(
+        df:pd.DataFrame, 
+        q:str, 
+        sorting:list[str], 
+        column:str=None, 
+        value:int='weight', 
+        column_seq:list[str]=None, 
+        row_seq:list[str]=None
+        )->pd.DataFrame:
     '''
     Create a table for single choice questions (row wise).
+    This script serves as the base script for the back-end of the crosstabs generator.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
-    value: Column name of your weights [str]
-    column_seq: Order of demographic sequence [list]
-    row_seq: Order of answer sequence [list]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
+        - value: Column name of your weights [str]
+        - column_seq: Order of demographic sequence [list]
+        - row_seq: Order of answer sequence [list]
 
-    Return a dataframe
+    Return:
+        - df_ct: pandas dataframe with crosstabs table.
     '''
     if row_seq != None:
         row_list = row_seq + ["Grand Total"]
@@ -116,18 +138,27 @@ def single_choice_crosstab_row(df:pd.DataFrame, q:str, sorting:list[str], column
     return df_ct
 
 
-def multi_choice_crosstab_column(df:pd.DataFrame, q:str, column:str, value:int='weight', column_seq:list[str]=None)->pd.DataFrame:
+def multi_choice_crosstab_column(
+        df:pd.DataFrame, 
+        q:str, 
+        column:str, 
+        value:int='weight', 
+        column_seq:list[str]=None
+        )->pd.DataFrame:
     '''
     Create a table for multi choice questions (column wise).
+    This script serves as the base script for the back-end of the crosstabs generator.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
-    value: Column name of your weights [str]
-    column_seq: Order of demographic sequence [list]
-    row_seq: Order of answer sequence [list]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
+        - value: Column name of your weights [str]
+        - column_seq: Order of demographic sequence [list]
+        - row_seq: Order of answer sequence [list]
 
-    Return a dataframe
+    Return:
+        - result: pandas dataframe with crosstabs table.
     '''
 
     if column_seq != None:
@@ -185,18 +216,27 @@ def multi_choice_crosstab_column(df:pd.DataFrame, q:str, column:str, value:int='
     return result
 
 
-def multi_choice_crosstab_row(df:pd.DataFrame, q:str, column:str, value:int='weight', column_seq:list[str]=None)->pd.DataFrame:
+def multi_choice_crosstab_row(
+        df:pd.DataFrame, 
+        q:str, 
+        column:str, 
+        value:int='weight', 
+        column_seq:list[str]=None
+        )->pd.DataFrame:
     '''
     Create a table for multi choice questions (row wise).
+    This script serves as the base script for the back-end of the crosstabs generator.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
-    value: Column name of your weights [str]
-    column_seq: Order of demographic sequence [list]
-    row_seq: Order of answer sequence [list]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - column: Column name of the demographic column that you're building the table across, would only generate the grand total when undefined [str]
+        - value: Column name of your weights [str]
+        - column_seq: Order of demographic sequence [list]
+        - row_seq: Order of answer sequence [list]
 
-    Return a dataframe
+    Return:
+        - result: pandas dataframe with crosstabs table.
     '''
 
     if column_seq != None:
