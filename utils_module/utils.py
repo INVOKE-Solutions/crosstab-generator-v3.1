@@ -7,9 +7,11 @@ def load(df:pd.DataFrame)->pd.DataFrame:
     '''
     A function to read and load the streamlit dataframe into pandas dataframe.
 
-    df: Whole dataframe [streamlit dataframe]
+    Args:
+        - df: Whole dataframe [streamlit dataframe]
 
-    Return a dataframe
+    Return:
+        - df: a pandas dataframe
     '''
     df_name = df.name
 
@@ -25,9 +27,11 @@ def demography(df:pd.DataFrame)->list:
     '''
     A function to autoselect the demography columns. 
 
-    df: Whole dataframe [pandas dataframe]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
 
-    Return a list
+    Return:
+        - default_demo: listof the column that contains string like 'age', 'gender', 'eth', 'income', 'urban'.
     '''
     default_demo = ['age', 'gender', 'eth', 'income', 'urban']
     data_list = list(df.columns)
@@ -36,14 +40,16 @@ def demography(df:pd.DataFrame)->list:
 
     return default_demo
 
-def col_search(df:pd.DataFrame, key:str)->list:
+def col_search(df:pd.DataFrame, key:str)->list[str]:
     '''
     A function to autoselect column/s with the keyword.
 
-    df: Whole dataframe [pandas dataframe]
-    key: keyword to match [str]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - key: keyword to match [str]
 
-    Return a list
+    Return:
+        - columns_with_string: list of the column that contains certain keyword. 
     '''
     columns_with_string = []
 
@@ -54,14 +60,16 @@ def col_search(df:pd.DataFrame, key:str)->list:
     return columns_with_string
 
 
-def sorter(demo:str, df:pd.DataFrame)->Any:
+def sorter(demo:str, df:pd.DataFrame)->list[str]:
     '''
     A function to sort the list of the unique value in the demographic column.
 
-    demo: Column name of the demography you're building the table on [str]
-    df: Whole dataframe [pandas dataframe]
+    Args:
+        - demo: Column name of the demography you're building the table on [str]
+        - df: Whole dataframe [pandas dataframe]
 
-    Return a sorted list of unique values from specific column in the dataframe
+    Return:
+        - sorted list of unique values from specific column in the dataframe
     '''
     if re.search(r'age', demo, re.IGNORECASE):
         return sorted(list(df[demo].unique()))
@@ -92,10 +100,12 @@ def sort_order(df:pd.DataFrame, sorting:list[str])->pd.DataFrame:
     '''
     A function to sort the order of crosstabs table based on the column selected by the user,
 
-    df: Whole dataframe [pandas dataframe]
-    sorting: keyword to match [str]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - sorting: keyword to match [str]
 
-    Return a dataframe
+    Return:
+        - df: pandas dataframe that has been sorted either based on the `Grand Total` value or name. 
     '''
     if df.columns[0] in sorting:
         return df[:-1].sort_values(df.columns[0])

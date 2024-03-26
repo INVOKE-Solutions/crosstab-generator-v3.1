@@ -1,14 +1,14 @@
 from component_module.component import (
     page_style,
     page_tabs,
-    crossgen_tab,
-    chart_gen
+    init_crossgen_tab,
+    init_chart_gen
 )
 
 page_style()
 tab1, tab2 = page_tabs()
 
 with tab1:
-    crossgen_tab()
+    init_crossgen_tab()
 with tab2:
-    chart_gen()
+    init_chart_gen()

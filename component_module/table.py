@@ -1,7 +1,5 @@
-
 from io import BytesIO
 from utils_module.processor import get_row, get_column
-from chart_module.chart import load_chart, crosstab_reader
 import pandas as pd
 
 def write_table(
@@ -12,9 +10,29 @@ def write_table(
         multi:list[str], 
         name_sort:list[str], 
         weight:str,
-        col_seqs:dict,
+        col_seqs:dict
         )->pd.DataFrame:
     
+    '''
+    Backend function to write the crosstabs table.
+    This script serves as the top script for the back-end of the crosstabs generator.
+
+    Args:
+        - df: pandas DataFrame 
+        - demos: List of name of the selected demography columns. 
+        - wise: User selection of the value options. 
+        - q_ls: List of question column. 
+        - multi: List of column that contains multiple answer option.
+        - name_sort: List of column to sort by the name. 
+        - weight: Name of the selected weight column [str]
+        - col_seqs:
+            - Key: Demography column
+            - Value: Sorted unique value of the key demography column.
+
+    Return:
+        - df_xlsx: pandas dataframe that contains crosstabs table.
+    '''
+
     # Initialize excel file
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
@@ -23,6 +41,8 @@ def write_table(
     # Write tables one by one according to the type of question
     for demo in demos:
         if wise == 'Both':
+
+            # start: loop counter to build the crosstabs table
             start = 1
             for q in q_ls:
                 start, workbook, worksheet = get_column(
@@ -37,6 +57,7 @@ def write_table(
                     start=start
                     )
 
+            # start_2: loop counter to build the crosstabs table
             start_2 = 1
             for q in q_ls:
                 start_2, workbook, worksheet = get_row(
@@ -52,6 +73,8 @@ def write_table(
                     )
 
         elif wise == '% of Column Total':
+
+            # start: loop counter to build the crosstabs table
             start = 1
             for q in q_ls:
                 start, workbook, worksheet = get_column(
@@ -67,6 +90,7 @@ def write_table(
                     )
 
         else:
+            # start_2: loop counter to build the crosstabs table
             start_2 = 1
             for q in q_ls:
                 start_2, workbook, worksheet = get_row(
@@ -82,4 +106,5 @@ def write_table(
                     )
     writer.save()
     df_xlsx = output.getvalue()
+    
     return df_xlsx

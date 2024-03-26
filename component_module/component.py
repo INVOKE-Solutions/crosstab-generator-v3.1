@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 import pandas as pd
+from typing import Any
 from utils_module.utils import load, demography, col_search, sorter
 from chart_module.chart import load_chart
 from component_module.table import write_table
@@ -8,7 +9,15 @@ from component_module.viz import draw_chart
 
 
 def page_style():
-    # Hide streamlit header and footer
+    '''
+    Streamlit page configuration.
+
+    Args:
+        - None
+
+    Return:
+        - None
+    '''
     hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -25,23 +34,60 @@ def page_style():
     st.title('CrossArt Generator')
     st.image(image)
 
-def page_tabs()->object:
+def page_tabs()->tuple[Any,Any]:
+    '''
+    Streamlit tabs configuration on the main page.
+
+    Args:
+        - None
+
+    Return:
+        - 2 streamlit tabs on the main page.
+    '''
     tab1, tab2 = st.tabs(["Crosstab Generator","Chart Generator"])
     return tab1, tab2
 
-def upload_file()->pd.DataFrame:
+def upload_file()->Any:
+    '''
+    Streamlit component for the user to upload the file.
+
+    Args:
+        - None
+
+    Return:
+        - df: streamlit dataframe, Uploadedfile sub-class of BytesIO. 
+    '''
     st.subheader("Upload Survey responses (csv/xlsx)")
     df = st.file_uploader(
         "Please ensure the data are cleaned and weighted (if need to be) prior to uploading."
         )
     return df
     
-def read_file(df:pd.DataFrame)->tuple[pd.DataFrame,str]:
+def read_file(df:Any)->tuple[pd.DataFrame,str]:
+    '''
+    Component to read file from streamlit dataframe.
+
+    Args:
+        - df: streamlit dataframe, Uploadedfile sub-class of BytesIO. 
+
+    Return:
+        - df: pandas dataframe
+        - df_name: Name of the uploaded file
+    '''
     df_name = df.name
     df = load(df)
     return df, df_name
 
 def weight_selection(df: pd.DataFrame)->str:
+    '''
+    Component for user to select `weight` column from the dataframe.
+
+    Args:
+        - df: pandas dataframe 
+
+    Return:
+        - weight: Name of the selected weight column [str]
+    '''
     weight = st.selectbox(
         'Select weight column',
         col_search(df, key="weight") + ['Unweighted', '']
@@ -49,6 +95,15 @@ def weight_selection(df: pd.DataFrame)->str:
     return weight
 
 def demography_selection(df:pd.DataFrame)->list[str]:
+    '''
+    Component for user to select `demography` column from the dataframe.
+
+    Args:
+        - df: pandas dataframe 
+
+    Return:
+        - demos: List of name of the selected demography columns.
+    '''
     demos = st.multiselect(
         "Choose the demograhic(s) you want to build the crosstabs across",
         list(df.columns) + demography(df),
@@ -57,6 +112,19 @@ def demography_selection(df:pd.DataFrame)->list[str]:
     return demos
 
 def demo_sorter(df:pd.DataFrame, demos:list[str])->tuple[int,dict]:
+    '''
+    Component for user to sort the unique value of `demography` column manually.
+
+    Args:
+        - df: pandas dataframe
+        - demos: List of name of the selected demography columns.
+
+    Return:
+        - score: List of name of the selected demography columns.
+        - col_seqs:
+            - Key: Demography column
+            - Value: Sorted unique value of the key demography column.
+    '''
     score = 0
     col_seqs = {}
     for demo in demos:
@@ -73,6 +141,15 @@ def demo_sorter(df:pd.DataFrame, demos:list[str])->tuple[int,dict]:
     return score, col_seqs
 
 def q1_selection(df:pd.DataFrame)->str:
+    '''
+    Component for user to select the column of the first question.
+
+    Args:
+        - df: pandas dataframe
+
+    Return:
+        - first: Name of the first question column [str]
+    '''
     first = st.selectbox(
         "Select the first question of the survey",
         [''] + list(df.columns)
@@ -80,6 +157,17 @@ def q1_selection(df:pd.DataFrame)->str:
     return first
 
 def qlast_selection(df:pd.DataFrame, first:str)->tuple[int,str]:
+    '''
+    Component for user to select the column of the last question.
+
+    Args:
+        - df: pandas dataframe
+        - first: Name of the first question column [str]
+
+    Return:
+        - first_idx: Index number of the first question column [int]
+        - last: Name of the last question column [str]
+    '''
     first_idx = list(df.columns).index(first)
     last = st.selectbox(
             "Select the last question of the survey", 
@@ -88,10 +176,31 @@ def qlast_selection(df:pd.DataFrame, first:str)->tuple[int,str]:
     return first_idx, last
 
 def qlast_index(df:pd.DataFrame, last:str)->int:
+    '''
+    Get the index of the last question column.
+
+    Args:
+        - df: pandas dataframe
+        - last: Name of the last question column [str]
+
+    Return:
+        - last_idx: Index number of the last question column [int]
+    '''
     last_idx = list(df.columns).index(last)
     return last_idx
 
 def sort_col_by_name(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
+    '''
+    Component for user to select column to sort by the name using keyword `LIKERT`.
+
+    Args:
+        - df: pandas dataframe
+        - first_idx: Index number of the first question column [int]
+        - last_idx: Index number of the last question column [int]
+
+    Return:
+        - name_sort: List of column to sort by the name.
+    '''
     name_sort = st.multiselect(
         "Choose question(s) to sort by name, if any [default: sort by value]", 
         list(df.columns)[first_idx: last_idx + 1], 
@@ -99,17 +208,47 @@ def sort_col_by_name(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
         )
     return name_sort
 
-def num_question(first_idx:int, last_idx:int)->st.subheader:
+def num_question(first_idx:int, last_idx:int)->Any:
+    '''
+    Component for streamlit to display the number of question column.
+
+    Args:
+        - first_idx: Index number of the first question column [int]
+        - last_idx: Index number of the last question column [int]
+
+    Return:
+        - None.
+    '''
     st.subheader(
         "Number of questions to build the crosstab on: " + str(
                                 last_idx - first_idx + 1
                                 ))
 
 def question_list(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
+    '''
+    Get the list of question.
+
+    Args:
+        - df: pandas dataframe
+        - first_idx: Index number of the first question column [int]
+        - last_idx: Index number of the last question column [int]
+
+    Return:
+        - q_ls: List of question column.
+    '''
     q_ls = [df.columns[x] for x in range(first_idx, last_idx + 1)]
     return q_ls
 
 def wise_list()->str:
+    '''
+    Component for user to choose the value options for the crosstabs.
+
+    Args:
+        - None.
+
+    Return:
+        - wise: User selection of the value options.
+    '''
     wise_list = ["% of Column Total","% of Row Total", "Both"]
     wise = st.selectbox(
         "Show values as:", 
@@ -118,6 +257,17 @@ def wise_list()->str:
     return wise
 
 def get_multi_answer(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
+    '''
+    Component for user to select column that contains multiple answer option using keyword `MULTI`.
+
+    Args:
+        - df: pandas dataframe
+        - first_idx: Index number of the first question column [int]
+        - last_idx: Index number of the last question column [int]
+
+    Return:
+        - multi: List of column that contains multiple answer option.
+    '''
     multi = st.multiselect(
         "Choose mutiple answers question(s), if any", 
         list(df.columns)[first_idx: last_idx + 1], 
@@ -125,22 +275,31 @@ def get_multi_answer(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
         )
     return multi
 
-def crossgen_tab():
+def init_crossgen_tab():
+    '''
+    Composite function to run the front-end of the crosstabs streamlit based on logic. 
+
+    Args:
+        - None
+
+    Return:
+        - None
+    '''
     df = upload_file()
     if df:
         df, df_name = read_file(df=df)
         weight = weight_selection(df=df)
-        if weight != '':
+        if weight:
             demos = demography_selection(df=df)
             if len(demos) > 0:
                 score, col_seqs = demo_sorter(df=df, demos=demos)
                 if score == len(demos):
                     first = q1_selection(df=df)
-                    if first != '':
+                    if first:
                         first_idx, last = qlast_selection(df=df, first=first)
-                        if last != '':
+                        if last:
                             last_idx = qlast_index(df=df, last=last)
-                            if last_idx != '':
+                            if last_idx:
                                 name_sort = sort_col_by_name(
                                     df=df,
                                     first_idx=first_idx,
@@ -156,7 +315,7 @@ def crossgen_tab():
                                     last_idx=last_idx
                                     )
                                 wise = wise_list()
-                                if wise != '':
+                                if wise:
                                     multi = get_multi_answer(
                                         df=df,
                                         first_idx=first_idx,
@@ -184,12 +343,30 @@ def crossgen_tab():
                                             )
                                         
 #--------------------Component for Chart Generator-------------------
-def issue_warning()->st.subheader:
+def issue_warning()->Any:
+    '''
+    Streamlit component to warn user regarding the type of uploaded file. 
+
+    Args:
+        - None
+
+    Return:
+        - streamlit subheader display.
+    '''
     st.subheader(
         "Upload Crosstab result in .xlsx format only"
     )
 
 def upload_crosstabs()->pd.DataFrame:
+    '''
+    Streamlit component for the user to upload file that contains crosstabs table.
+
+    Args:
+        - None
+
+    Return:
+        - df_charts: streamlit dataframe, Uploadedfile sub-class of BytesIO. 
+    '''
     st.warning(
         "Please ensure the file contains the **CROSSTAB TABLE**:heavy_exclamation_mark::heavy_exclamation_mark: prior to uploading.", 
         icon="❗"
@@ -198,12 +375,30 @@ def upload_crosstabs()->pd.DataFrame:
     return df_charts
 
 def error_warning()->st.error:
+    '''
+    Streamlit component to display error to user when the uploaded file did not contain crosstabs table. 
+
+    Args:
+        - None
+
+    Return:
+        - streamlit error display.
+    '''
     st.error(
         "The file should contain the crosstab tables!", 
         icon="🚨"
         )
 
-def chart_gen():
+def init_chart_gen():
+    '''
+    Composite function to run the front-end of the chart generator streamlit based on logic. 
+
+    Args:
+        - None
+
+    Return:
+        - None
+    '''
     issue_warning()
     try:
         df_charts = upload_crosstabs()

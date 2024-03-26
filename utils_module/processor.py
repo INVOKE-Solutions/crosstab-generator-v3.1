@@ -6,17 +6,21 @@ def get_column(df:pd.DataFrame, q:str, multi:list[str], name_sort:list[str], dem
     '''
     Generate the crosstab tables per column values using the multi_choice_crosstab_column function and single_choice_crosstab_column.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    multi: Question that has multiple choice answer [str]
-    name_sort: list of the column to sort by name [str] 
-    demo: Item in the for loop function [str]
-    weight: Weight that you want to use to build the crosstab table [str]
-    col_seqs: Order of demographic sequence [list]
-    writer: Engine to write the Excel sheet
-    start: Number to loop [int]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - multi: Question that has multiple choice answer [str]
+        - name_sort: list of the column to sort by name [str] 
+        - demo: Item in the for loop function [str]
+        - weight: Weight that you want to use to build the crosstab table [str]
+        - col_seqs: Order of demographic sequence [list]
+        - writer: Engine to write the Excel sheet
+        - start: Number to loop [int]
 
-    Return a tuple of integer, Excel workbook and Excel worksheet
+    Return:
+        - start: loop updated counter [int]
+        - workbook: Excel workbook.
+        - worksheet: Excel worksheet.
     '''
     if q in multi:
         table = multi_choice_crosstab_column(df=df, q=q, column=demo, value=weight, column_seq=col_seqs[demo])
@@ -34,17 +38,21 @@ def get_row(df:pd.DataFrame, q:str, multi:list[str], name_sort:list[str], demo:s
     '''
     Generate the crosstab tables per row values using the multi_choice_crosstab_row function and single_choice_crosstab_row.
 
-    df: Whole dataframe [pandas dataframe]
-    q: Column name of the question you're building the table on [str]
-    multi: Question that has multiple choice answer [str]
-    name_sort: list of the column to sort by name [str]
-    demo: Item in the for loop function [str]
-    weight: Weight that you want to use to build the crosstab table [str]
-    col_seqs: Order of demographic sequence [list]
-    writer: Engine to write the Excel sheet
-    start: Number to loop [int]
+    Args:
+        - df: Whole dataframe [pandas dataframe]
+        - q: Column name of the question you're building the table on [str]
+        - multi: Question that has multiple choice answer [str]
+        - name_sort: list of the column to sort by name [str]
+        - demo: Item in the for loop function [str]
+        - weight: Weight that you want to use to build the crosstab table [str]
+        - col_seqs: Order of demographic sequence [list]
+        - writer: Engine to write the Excel sheet
+        - start: Number to loop [int]
 
-    Return a tuple of integer, Excel workbook and Excel worksheet
+    Return:
+        - start_2: loop updated counter [int]
+        - workbook: Excel workbook.
+        - worksheet: Excel worksheet.
     '''
     if q in multi:
         table_2 = multi_choice_crosstab_row(df=df, q=q, column=demo, value=weight, column_seq=col_seqs[demo])
