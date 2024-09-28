@@ -27,10 +27,10 @@ def get_column(df:pd.DataFrame, q:str, multi:list[str], name_sort:list[str], dem
     else:
         table = single_choice_crosstab_column(df=df, q=q, sorting=name_sort, column=demo, value=weight, column_seq=col_seqs[demo])
 
-    table.to_excel(writer, index=False, sheet_name=f"{demo}(col)", startrow=start)
+    table.to_excel(writer, index=False, sheet_name=f"{demo}", startrow=start)
     start = start + len(table) + 3
     workbook = writer.book
-    worksheet = writer.sheets[f"{demo}(col)"]
+    worksheet = writer.sheets[f"{demo}"]
     
     return start, workbook, worksheet
 
