@@ -1,5 +1,6 @@
 colour==0.1.5
 matplotlib==3.7.1
+numpy==1.26.4
 pandas==1.4.3
 Pillow==9.5.0
 pyxlsb==1.0.10

@@ -1,2 +1,4 @@
 [theme]
-base="dark"
+base="light"
+primaryColor="purple"
+textColor="#35c3db"

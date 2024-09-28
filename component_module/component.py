@@ -23,16 +23,24 @@ def page_style():
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
+            #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem; padding-bottom: 4rem;}
             </style>
             """
 
     # configure the default settings of the page.
     icon = Image.open('photos/invoke_icon.jpg')
-    st.set_page_config(page_icon=icon)
+
+    st.set_page_config(page_icon=icon, layout="centered")
+
     st.markdown(hide_st_style, unsafe_allow_html=True)
-    image = Image.open('photos/invoke_logo.png')
+
+    # image = Image.open('photos/table.gif')
+    # st.image('photos/spreadsheet.gif', use_column_width='auto')
+    _left, mid, _right = st.columns(3)
+    with mid:
+        st.image('photos/spreadsheet.gif')
+    
     st.title('CrossArt Generator')
-    st.image(image)
 
 def page_tabs()->tuple[Any,Any]:
     '''
@@ -57,9 +65,9 @@ def upload_file()->Any:
     Return:
         - df: streamlit dataframe, Uploadedfile sub-class of BytesIO. 
     '''
-    st.subheader("Upload Survey responses (csv/xlsx)")
+    # st.subheader("Upload Survey responses (csv/xlsx)")
     df = st.file_uploader(
-        "Please ensure the data are cleaned and weighted (if need to be) prior to uploading."
+        "Please ensure the data are cleaned and weighted (if need be) prior to uploading."
         )
     return df
     
