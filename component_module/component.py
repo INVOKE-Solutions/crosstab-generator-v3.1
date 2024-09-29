@@ -23,7 +23,7 @@ def page_style():
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
-            #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem; padding-bottom: 4rem;}
+            #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 5rem; padding-bottom: 4rem;}
             </style>
             """
 
@@ -36,11 +36,15 @@ def page_style():
 
     # image = Image.open('photos/table.gif')
     # st.image('photos/spreadsheet.gif', use_column_width='auto')
-    _left, mid, _right = st.columns(3)
-    with mid:
+    _left, mid_left, mid_right, _right = st.columns(spec = 4)
+    
+    with mid_left:
         st.image('photos/spreadsheet.gif')
     
-    st.title('CrossArt Generator')
+    with mid_right:
+        st.image('photos/bar_chart.gif')
+    
+    st.title('Crosstab X Chart Generator')
 
 def page_tabs()->tuple[Any,Any]:
     '''
@@ -67,7 +71,8 @@ def upload_file()->Any:
     '''
     # st.subheader("Upload Survey responses (csv/xlsx)")
     df = st.file_uploader(
-        "Please ensure the data are cleaned and weighted (if need be) prior to uploading."
+        "Upload cleaned survey data (and weighted, if necessary)",
+        type=['csv', 'xlsx']
         )
     return df
     
@@ -197,7 +202,7 @@ def qlast_index(df:pd.DataFrame, last:str)->int:
     last_idx = list(df.columns).index(last)
     return last_idx
 
-def sort_col_by_name(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
+def sort_col_by_name(df: pd.DataFrame, first_idx: int, last_idx: int)->list[str]:
     '''
     Component for user to select column to sort by the name using keyword `LIKERT`.
 
@@ -210,10 +215,11 @@ def sort_col_by_name(df:pd.DataFrame, first_idx:int, last_idx:int)->list[str]:
         - name_sort: List of column to sort by the name.
     '''
     name_sort = st.multiselect(
-        "Choose question(s) to sort by name, if any [default: sort by value]", 
-        list(df.columns)[first_idx: last_idx + 1], 
-        col_search(df[first_idx: last_idx + 1], key="[LIKERT]")
+        label = "Choose question(s) to sort by name, if any [default: sort by value]", 
+        options = list(df.columns)[first_idx: last_idx + 1], 
+        default = col_search(df[first_idx: last_idx + 1], key="[LIKERT]")
         )
+    
     return name_sort
 
 def num_question(first_idx:int, last_idx:int)->Any:
@@ -308,47 +314,52 @@ def init_crossgen_tab():
                         if last:
                             last_idx = qlast_index(df=df, last=last)
                             if last_idx:
-                                name_sort = sort_col_by_name(
-                                    df=df,
-                                    first_idx=first_idx,
-                                    last_idx=last_idx
-                                    )
-                                num_question(
-                                    first_idx=first_idx,
-                                    last_idx=last_idx
-                                    )
-                                q_ls = question_list(
-                                    df=df,
-                                    first_idx=first_idx,
-                                    last_idx=last_idx
-                                    )
-                                wise = wise_list()
-                                if wise:
-                                    multi = get_multi_answer(
+                                    name_sort = sort_col_by_name(
                                         df=df,
                                         first_idx=first_idx,
                                         last_idx=last_idx
                                         )
-                                    button = st.button('Generate Crosstabs')
-                                    if button:
-                                        df_xlsx = write_table(
+                                    num_question(
+                                        first_idx=first_idx,
+                                        last_idx=last_idx
+                                        )
+                                    q_ls = question_list(
+                                        df=df,
+                                        first_idx=first_idx,
+                                        last_idx=last_idx
+                                        )
+                                    wise = wise_list()
+                                    if wise:
+                                        multi = get_multi_answer(
                                             df=df,
-                                            demos=demos,
-                                            wise=wise,
-                                            q_ls=q_ls,
-                                            multi=multi,
-                                            name_sort=name_sort,
-                                            weight=weight,
-                                            col_seqs=col_seqs
+                                            first_idx=first_idx,
+                                            last_idx=last_idx
                                             )
-                                        df_name = df_name[:df_name.find('.')]
-                                        st.balloons()
-                                        st.header('Crosstabs ready for download!')
-                                        st.download_button(
-                                            label='📥 Download', 
-                                            data=df_xlsx, 
-                                            file_name= df_name + '-crosstabs.xlsx'
-                                            )
+                                        
+                                        button = st.button('Generate Crosstabs')
+                                        
+                                        if button:
+
+                                            with st.spinner(text="Building crosstabs..."):
+
+                                                df_xlsx = write_table(
+                                                    df=df,
+                                                    demos=demos,
+                                                    wise=wise,
+                                                    q_ls=q_ls,
+                                                    multi=multi,
+                                                    name_sort=name_sort,
+                                                    weight=weight,
+                                                    col_seqs=col_seqs
+                                                    )
+                                                df_name = df_name[:df_name.find('.')]
+                                                st.balloons()
+                                                st.header('Crosstabs ready for download!')
+                                                st.download_button(
+                                                    label='📥 Download', 
+                                                    data=df_xlsx, 
+                                                    file_name= df_name + '_crosstabs.xlsx'
+                                                    )
                                         
 #--------------------Component for Chart Generator-------------------
 def issue_warning()->Any:
