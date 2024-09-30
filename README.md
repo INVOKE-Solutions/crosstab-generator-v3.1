@@ -1,9 +1,10 @@
-# Crosstab Generator Version 3
+# Crosstab Generator Version 3.1
 
-An upgraded version of the previous crosstab generator 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://crosstab-generator-v3-1.streamlit.app/)
 
-You can access the crosstab generator through the link below <br />
-🠊 https://invoke-analytics-crosstab-generator-v3-generator-6pyb9x.streamlit.app/
+This is INVOKE's Crosstab Generator with enhanced UI for better experience.
+
+![The App deployed in Streamlit Cloud](photos\app_screenshot.png)
 
 ## What is Crosstab?
 
@@ -22,7 +23,7 @@ This project aims to expedite our crosstab generation process from long minutes 
 3. **generator.py** <br />
    Project code
 4. **photos** <br />
-   Contains INVOKE Analytics logo and INVOKE logo to be imported into generator.py
+   Contains all image files used in the app
 5. **requirements.txt** <br />
    List of the libraries and their respective versions required for the project
 6. **crosstab_module** <br />
@@ -38,26 +39,29 @@ Contains all of the components; front-end component for streamlit and back-end c
 
 ```
 .
-├── README.md
-├── .streamlit/
-│   └── config.toml
 ├── .github/
 │   └── dependabot.yml
+├── .streamlit/
+│   └── config.toml
 ├── chart_module/
 │   └── chart.py
-├── crosstab_module/
-│   └── crosstab.py
 ├── component_module/
 │   └── component.py
 │   └── table.py
 │   └── viz.py
+├── crosstab_module/
+│   └── crosstab.py
 ├── photos/
-│   ├── invoke_icon.jpg
-│   └── invoke_logo.png
+│   ├── app_screenshot.png
+    ├── bar_chart.gif
+    ├── invoke_icon.jpg
+│   ├── invoke_logo.png
+    └── spreadsheet.gif
 ├── utils_module/
 │   ├── processor.py
 │   └── utils.py
 ├── generator.py
+├── README.md
 └── requirements.txt
 ```
 
@@ -99,13 +103,6 @@ Contains all of the components; front-end component for streamlit and back-end c
 
 **2. Add new demography in the demography sorter function for automation:**
 * [ ]  State demography.
- 
-**3. Combine of survey weighting platform and crosstabs generator:**
-* [ ]  Create APIs for crosstabs geerator and survey weighting platform.
-
-### Built With
-
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://invoke-analytics-crosstabs-prod-generator-cs1fpd.streamlitapp.com/)
 
 ## Getting Started
 
