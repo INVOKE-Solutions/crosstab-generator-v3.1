@@ -3,7 +3,7 @@ import pandas as pd
 import re
 from typing import Any
 
-def load(df:pd.DataFrame)->pd.DataFrame:
+def load(df: pd.DataFrame) -> pd.DataFrame:
     '''
     A function to read and load the streamlit dataframe into pandas dataframe.
 
@@ -23,7 +23,7 @@ def load(df:pd.DataFrame)->pd.DataFrame:
     
     return df
 
-def demography(df:pd.DataFrame)->list:
+def demography(df: pd.DataFrame) -> list:
     '''
     A function to autoselect the demography columns. 
 
@@ -40,7 +40,7 @@ def demography(df:pd.DataFrame)->list:
 
     return default_demo
 
-def col_search(df:pd.DataFrame, key:str)->list[str]:
+def col_search(df: pd.DataFrame, keyword: str) -> list[str]:
     '''
     A function to autoselect column/s with the keyword.
 
@@ -54,13 +54,13 @@ def col_search(df:pd.DataFrame, key:str)->list[str]:
     columns_with_string = []
 
     for column in df.columns:
-        if key in column:
+        if keyword in column:
             columns_with_string.append(column)
 
     return columns_with_string
 
 
-def sorter(demo:str, df:pd.DataFrame)->list[str]:
+def sorter(demo: str, df: pd.DataFrame) -> list[str]:
     '''
     A function to sort the list of the unique value in the demographic column.
 
@@ -96,7 +96,7 @@ def sorter(demo:str, df:pd.DataFrame)->list[str]:
                                      1 if re.match(r'^S', x) else
                                      2 if re.match(r'^R|^L', x) else 3))
     
-def sort_order(df:pd.DataFrame, sorting:list[str])->pd.DataFrame:
+def sort_order(df: pd.DataFrame, sorting: list[str]) -> pd.DataFrame:
     '''
     A function to sort the order of crosstabs table based on the column selected by the user,
 
