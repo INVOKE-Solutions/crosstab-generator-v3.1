@@ -3,14 +3,14 @@ import numpy as np
 from utils_module.utils import sort_order
 
 def single_choice_crosstab_column(
-        df:pd.DataFrame, 
-        q:str, 
-        sorting:list[str], 
-        column:str=None, 
-        value:int='weight', 
-        column_seq:list[str]=None, 
-        row_seq:list[str]=None
-        )->pd.DataFrame:
+        df: pd.DataFrame, 
+        q: str, 
+        sorting: list[str], 
+        column: str=None, 
+        value: int='weight', 
+        column_seq: list[str]=None, 
+        row_seq: list[str]=None
+        ) -> pd.DataFrame:
     '''
     Create a table for single choice questions (column wise).
     This script serves as the base script for the back-end of the crosstabs generator.

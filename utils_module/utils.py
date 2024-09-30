@@ -31,7 +31,7 @@ def demography(df: pd.DataFrame) -> list:
         - df: Whole dataframe [pandas dataframe]
 
     Return:
-        - default_demo: listof the column that contains string like 'age', 'gender', 'eth', 'income', 'urban'.
+        - default_demo: list of the column that contains string like 'age', 'gender', 'eth', 'income', 'urban'.
     '''
     default_demo = ['age', 'gender', 'eth', 'income', 'urban']
     data_list = list(df.columns)
@@ -98,7 +98,7 @@ def sorter(demo: str, df: pd.DataFrame) -> list[str]:
     
 def sort_order(df: pd.DataFrame, sorting: list[str]) -> pd.DataFrame:
     '''
-    A function to sort the order of crosstabs table based on the column selected by the user,
+    A function to sort the order of crosstabs table based on the column selected by the user.
 
     Args:
         - df: Whole dataframe [pandas dataframe]
@@ -111,4 +111,3 @@ def sort_order(df: pd.DataFrame, sorting: list[str]) -> pd.DataFrame:
         return df[:-1].sort_values(df.columns[0])
     else:
         return df[:-1].sort_values('Grand Total', ascending = False)
-
