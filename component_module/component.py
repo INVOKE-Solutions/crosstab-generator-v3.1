@@ -27,15 +27,13 @@ def page_style():
             </style>
             """
 
-    # configure the default settings of the page.
+    # configure the default settings of the page
     icon = Image.open('photos/invoke_icon.jpg')
 
     st.set_page_config(page_icon=icon, layout="centered")
 
     st.markdown(hide_st_style, unsafe_allow_html=True)
 
-    # image = Image.open('photos/table.gif')
-    # st.image('photos/spreadsheet.gif', use_column_width='auto')
     _left, mid_left, mid_right, _right = st.columns(spec = 4)
     
     with mid_left:
@@ -45,6 +43,7 @@ def page_style():
         st.image('photos/bar_chart.gif')
     
     st.title('Crosstab X Chart Generator')
+    st.caption('by INVOKE Analytics')
 
 def page_tabs() -> tuple[Any, Any]:
     '''
@@ -56,7 +55,7 @@ def page_tabs() -> tuple[Any, Any]:
     Return:
         - 2 streamlit tabs on the main page.
     '''
-    tab1, tab2 = st.tabs(["Crosstabs Generator", "Chart Generator"])
+    tab1, tab2 = st.tabs(["Crosstabs Generator", "Chart Generator"], )
     
     return tab1, tab2
 
