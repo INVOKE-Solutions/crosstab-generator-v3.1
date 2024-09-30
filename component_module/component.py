@@ -145,11 +145,12 @@ def demo_sorter(df: pd.DataFrame, demos: list[str]) -> tuple[int, dict]:
     '''
     score = 0
     col_seqs = {}
+
     for demo in demos:
         st.subheader('Column: ' + demo)
         col_seq = st.multiselect(
-            'Please arrange ALL values in order', 
-            list(df[demo].unique()), 
+            label = 'Please arrange ALL values in desired order', 
+            options = list(df[demo].unique()), 
             default = sorter(demo, df = df), 
             key = demo
             )
@@ -229,7 +230,7 @@ def sort_col_by_name(df: pd.DataFrame, first_idx: int, last_idx: int) -> list[st
     name_sort = st.multiselect(
                 label = "Choose question(s) to sort by name, if any [default: sort by value]", 
                 options = list(df.columns)[first_idx:last_idx], 
-                default = col_search(df[first_idx:last_idx], keyword="[LIKERT]"),
+                default = col_search(df.iloc[:, first_idx:last_idx + 1], keyword="[LIKERT]"),
                 disabled = False
                 )
  
@@ -450,9 +451,9 @@ def init_chart_gen():
             st.header("Charts ready for download!")
             
             st.download_button(
-                label='📥 Download', 
-                data=df_charts, 
-                file_name= df_chartsname + '-charts.xlsx'
+                label = '📥 Download', 
+                data = df_charts, 
+                file_name = df_chartsname + '_charts.xlsx'
                 )
     except:
         error_warning()
