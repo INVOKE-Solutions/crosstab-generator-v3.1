@@ -2,9 +2,9 @@
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://crosstab-generator-v3-1.streamlit.app/)
 
-This is INVOKE's Crosstab Generator with enhanced UI for better experience.
+This is INVOKE's latest Crosstab Generator with enhanced UI for better experience.
 
-![The App deployed in Streamlit Cloud](photos\app_screenshot.png)
+![Screenshot 2024-09-30 162436](https://github.com/user-attachments/assets/6d1c8368-050d-4ae7-b9cf-1bc204f779f7)
 
 ## What is Crosstab?
 
