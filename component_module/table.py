@@ -3,15 +3,15 @@ from utils_module.processor import get_row, get_column
 import pandas as pd
 
 def write_table(
-        df:pd.DataFrame, 
-        demos:list[str], 
-        wise:str, 
-        q_ls:list[str], 
-        multi:list[str], 
-        name_sort:list[str], 
-        weight:str,
-        col_seqs:dict
-        )->pd.DataFrame:
+        df: pd.DataFrame, 
+        demos: list[str], 
+        wise: str, 
+        q_ls: list[str], 
+        multi: list[str], 
+        name_sort: list[str], 
+        weight: str,
+        col_seqs: dict
+        ) -> pd.DataFrame:
     
     '''
     Backend function to write the crosstabs table.
@@ -35,8 +35,8 @@ def write_table(
 
     # Initialize excel file
     output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, index=False, sheet_name= 'data')
+    writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
+    df.to_excel(writer, index = False, sheet_name = 'data')
 
     # Write tables one by one according to the type of question
     for demo in demos:
@@ -104,7 +104,8 @@ def write_table(
                     writer=writer, 
                     start_2=start_2
                     )
-    writer.save()
+    writer.close()
+
     df_xlsx = output.getvalue()
     
     return df_xlsx
