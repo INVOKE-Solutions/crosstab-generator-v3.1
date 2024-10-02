@@ -17,7 +17,7 @@ def load_chart(df_charts: pd.DataFrame, filename: bool = False) -> tuple[list[pd
         - df_chartsname: Name of the uploaded file
     '''
     df_chartsname = ''
-    
+
     if filename:
         df_chartsname = df_charts.name
 
@@ -101,6 +101,7 @@ def crosstab_reader(workbook: pd.ExcelWriter, df: pd.DataFrame, sheet_name: list
 
         # Bold the column name
         bold = workbook.add_format({'bold': 1})
+        
         # Write the sub_df to the worksheet
         for i, col in enumerate(sub_df.columns):
             worksheet.write(start_row, i, col, bold)

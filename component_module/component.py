@@ -300,9 +300,9 @@ def get_multi_answer(df: pd.DataFrame, first_idx: int, last_idx: int) -> list[st
         - multi: List of column that contains multiple answer option.
     '''
     multi = st.multiselect(
-        "Choose mutiple answers question(s), if any", 
-        list(df.columns)[first_idx: last_idx + 1], 
-        col_search(df[first_idx: last_idx + 1], keyword = "[MULTI]")
+        label = "Choose mutiple answers question(s), if any", 
+        options = list(df.columns)[first_idx: last_idx + 1], 
+        default = col_search(df.loc[: first_idx: last_idx + 1], keyword = "[MULTI]")
         )
     
     return multi
@@ -453,7 +453,7 @@ def init_chart_gen():
 
             df_charts = draw_chart(dfs=dfs, sheet_names=sheet_names)
             st.toast('Charts drawn successfully')
-            
+
             df_chartsname = df_chartsname[:df_chartsname.find('.')]
             
             st.balloons()
