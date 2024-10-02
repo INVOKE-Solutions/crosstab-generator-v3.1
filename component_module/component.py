@@ -1,6 +1,7 @@
 import streamlit as st
-from PIL import Image
 import pandas as pd
+import time
+from PIL import Image
 from typing import Any
 from utils_module.utils import load, demography, col_search, sorter
 from chart_module.chart import load_chart
@@ -408,6 +409,7 @@ def upload_crosstabs() -> pd.DataFrame:
         "Please ensure the file contains the **CROSSTAB TABLE**:heavy_exclamation_mark::heavy_exclamation_mark: prior to uploading.", 
         icon="❗"
         )
+    
     df_charts = st.file_uploader("Upload the file here:")
     
     return df_charts
@@ -438,11 +440,20 @@ def init_chart_gen():
         - None
     '''
     issue_warning()
+    
     try:
+        
         df_charts = upload_crosstabs()
+        
         if df_charts:
-            dfs, sheet_names, df_chartsname = load_chart(df_charts=df_charts)
+            st.toast('File is uploaded successfully')
+
+            dfs, sheet_names, df_chartsname = load_chart(df_charts=df_charts, filename=True)
+            st.toast('Streamlit DataFrames loaded successfully')
+
             df_charts = draw_chart(dfs=dfs, sheet_names=sheet_names)
+            st.toast('Charts drawn successfully')
+            
             df_chartsname = df_chartsname[:df_chartsname.find('.')]
             
             st.balloons()

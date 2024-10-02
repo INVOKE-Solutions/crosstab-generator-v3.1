@@ -3,19 +3,24 @@ import pandas as pd
 import numpy as np
 from typing import Any
 
-def load_chart(df_charts: pd.DataFrame) -> tuple[list[pd.DataFrame], list, str]:
+def load_chart(df_charts: pd.DataFrame, filename: bool = False) -> tuple[list[pd.DataFrame], list[str], str]:
     '''
     A function to read and load the streamlit dataframe into pandas dataframe.
     
     Args:
-        - df_charts: Whole dataframe [streamlit dataframe]
+        - df_charts: Filepath or buffer(Streamlit dataframe/SpooledTemporaryFile)
+        - filename: booleean to store the name of the file [default=False]
     
     Return:
         - dfs: List of pandas dataframe.
-        - sheet_names: Name of the sheet
+        - sheet_names: List of name of the sheet
         - df_chartsname: Name of the uploaded file
     '''
-    df_chartsname = df_charts.name
+    df_chartsname = ''
+    
+    if filename:
+        df_chartsname = df_charts.name
+
     # Read all sheet names in the Excel file
     all_sheet_names = pd.ExcelFile(df_charts).sheet_names
 
@@ -27,6 +32,7 @@ def load_chart(df_charts: pd.DataFrame) -> tuple[list[pd.DataFrame], list, str]:
 
     # Read all tables from multiple sheets
     dfs = []
+
     for sheet_name in sheet_names_to_read:
         df = pd.read_excel(df_charts, sheet_name=sheet_name, header=None)
         dfs.append(df)
