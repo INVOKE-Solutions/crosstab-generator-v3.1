@@ -228,7 +228,7 @@ def sort_col_by_name(df: pd.DataFrame, first_idx: int, last_idx: int) -> list[st
         - name_sort: List of column to sort by the name.
     '''
     name_sort = st.multiselect(
-                label = "Choose question(s) to sort by name, if any [default: sort by value]", 
+                label = "Choose question(s) to sort by answer options, if any (default: sort by % value), in ascending order", 
                 options = list(df.columns)[first_idx:last_idx], 
                 default = col_search(df.iloc[:, first_idx:last_idx + 1], keyword="[LIKERT]"),
                 disabled = False
@@ -248,7 +248,7 @@ def num_question(first_idx: int, last_idx: int) -> Any:
         - None.
     '''
     st.subheader(
-        "Number of questions to build the crosstab on: " + str(
+        "Number of questions to build the crosstabs on: " + str(
                                 last_idx - first_idx + 1
                                 ))
 
