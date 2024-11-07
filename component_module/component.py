@@ -172,6 +172,8 @@ def q1_selection(df: pd.DataFrame) -> str:
     Return:
         - first: Name of the first question column [str]
     '''
+
+    st.subheader("Questions selection")
     first = st.selectbox(
         "Select the first question of the survey",
         [''] + list(df.columns)
@@ -227,9 +229,11 @@ def sort_col_by_name(df: pd.DataFrame, first_idx: int, last_idx: int) -> list[st
     Return:
         - name_sort: List of column to sort by the name.
     '''
+
+    st.subheader("Answer options sorting")
     name_sort = st.multiselect(
-                label = "Choose question(s) to sort by answer options, if any (default: sort by % value), in ascending order", 
-                options = list(df.columns)[first_idx:last_idx], 
+                label = "Choose question(s) to sort by answer options text in ascending order (default: sort by % value)", 
+                options = list(df.columns)[first_idx:last_idx + 1], 
                 default = col_search(df.iloc[:, first_idx:last_idx + 1], keyword="[LIKERT]"),
                 disabled = False
                 )
