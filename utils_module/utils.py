@@ -33,9 +33,12 @@ def demography(df: pd.DataFrame) -> list:
     Return:
         - default_demo: list of the column that contains string like 'age', 'gender', 'eth', 'income', 'urban'.
     '''
+    # Define a regex pattern to match common demographic terms
     default_demo = ['age', 'gender', 'eth', 'income', 'urban']
-    data_list = list(df.columns)
     pattern = re.compile('|'.join(default_demo), re.IGNORECASE)
+    
+    data_list = df.columns.tolist()
+    
     default_demo = [item for item in data_list if pattern.search(item) and len(item.split()) <= 2]
 
     return default_demo
@@ -71,6 +74,7 @@ def sorter(demo: str, df: pd.DataFrame) -> list[str]:
     Return:
         - sorted list of unique values from specific column in the dataframe
     '''
+    
     if re.search(r'age', demo, re.IGNORECASE):
         return sorted(list(df[demo].unique()))
 
