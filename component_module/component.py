@@ -132,7 +132,7 @@ def demography_selection(df: pd.DataFrame) -> list[str]:
 
 def demo_sorter(df: pd.DataFrame, demos: list[str]) -> tuple[int, dict]:
     '''
-    Component for user to sort the unique value of `demography` column manually.
+    Component to sort the unique value in the `demography` column in logical order.
 
     Args:
         - df: pandas dataframe
@@ -150,6 +150,8 @@ def demo_sorter(df: pd.DataFrame, demos: list[str]) -> tuple[int, dict]:
     for demo in demos:
         
         sorted_values = sorter(demo, df = df)
+        
+        # Ensure that the sorted values do not contain NaN
         default_values = [value for value in sorted_values if value is not np.nan]
         
         st.subheader('Column: ' + demo)
@@ -161,9 +163,7 @@ def demo_sorter(df: pd.DataFrame, demos: list[str]) -> tuple[int, dict]:
             )
         
         col_seqs[demo] = col_seq
-        
-        # Ensure that the user has selected all unique values in the column
-        # if len(col_seq) == len([value for value in df[demo].unique().tolist() if value is not np.nan]):
+
         sorted_col_count += 1
     
     return sorted_col_count, col_seqs
@@ -331,34 +331,42 @@ def init_crossgen_tab():
     if df:
         df, df_name = read_file(df=df)
         weight = weight_selection(df=df)
+        
         if weight:
             demos = demography_selection(df=df)
+            
             if len(demos) > 0:
                 sorted_col_count, col_seqs = demo_sorter(df=df, demos=demos)
                 
-                # Ensure all demographic columns are sorted
-                if sorted_col_count == len(demos):
+                if sorted_col_count == len(demos):  # Ensure all demographic columns are sorted
                     first = q1_selection(df=df)
+                    
                     if first:
                         first_idx, last = qlast_selection(df=df, first=first)
+                        
                         if last:
                             last_idx = qlast_index(df=df, last=last)
+                            
                             if last_idx:
                                 name_sort = sort_col_by_name(
                                     df=df,
                                     first_idx=first_idx,
                                     last_idx=last_idx
                                     )
+                                
                                 num_question(
                                     first_idx=first_idx,
                                     last_idx=last_idx
                                     )
+                                
                                 q_ls = question_list(
                                     df=df,
                                     first_idx=first_idx,
                                     last_idx=last_idx
                                     )
+                                
                                 wise = wise_list()
+                                
                                 if wise:
                                     multi = get_multi_answer(
                                         df=df,
