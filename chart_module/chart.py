@@ -63,7 +63,7 @@ def generate_bar_chart(df: pd.DataFrame, start: int, workbook: pd.ExcelWriter, w
 
     # Add data series to the chart
     for i in range(1, df_no_total.shape[1]):  
-        if df_no_total.columns[i] != 'Grand Total':  # Exclude column with name 'Grand Total'
+        if df_no_total.columns[i] not in ['Grand Total', '']:  # Exclude column with name 'Grand Total'
             chart.add_series({
                 'name': [worksheet.name, start[0], start[1] + i],
                 'categories': [worksheet.name, start[0] + 1, start[1], start[0] + df_no_total.shape[0], start[1]],  # Include the last row
@@ -72,6 +72,13 @@ def generate_bar_chart(df: pd.DataFrame, start: int, workbook: pd.ExcelWriter, w
 
     # Set the chart title based on the first column
     title = df_no_total.columns[0]
+    
+    # Remove '[LIKERT]' and '[MULTI]' strings from the title if it exists
+    to_remove = ['[LIKERT]', '[MULTI]']
+    
+    for word in to_remove:
+        title = title.replace(word, '').strip()
+    
     chart.set_title({'name': title})
 
     # Insert the chart into the worksheet
@@ -93,12 +100,22 @@ def crosstab_reader(workbook: pd.ExcelWriter, df: pd.DataFrame, sheet_name: list
 
     worksheet = workbook.add_worksheet(sheet_name)
 
+    # Convert the DataFrame to a binary matrix
     larr = label(np.array(df.notnull()).astype("int"))
     start_row = 0
     charts = []
+    
+    # Iterate through each labeled region in the binary matrix
     for s in regionprops(larr):
+        
+        # Extract the sub-dataframe based on the bounding box of the region
         sub_df = (df.iloc[s.bbox[0]:s.bbox[2], s.bbox[1]:s.bbox[3]].pipe(lambda df_: df_.rename(columns=df_.iloc[0]).drop(df_.index[0])))
-
+        
+        # Remove any columns if the column name is 'nan'
+        for col in sub_df.columns:
+            if str(col) == 'nan':
+                sub_df.drop(columns=col, inplace=True)
+        
         # Bold the column name
         bold = workbook.add_format({'bold': 1})
         

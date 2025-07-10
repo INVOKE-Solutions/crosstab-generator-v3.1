@@ -15,8 +15,12 @@ def draw_chart(dfs: list[pd.DataFrame], sheet_names: list) -> bytes:
     Return:
         - df_charts: crosstabs table that contains clustered column chart.
     '''
+    # Create a BytesIO object to hold the Excel file in memory
     output = BytesIO()
+    
+    # Create a new Excel workbook in memory
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    logging.info("Workbook created successfully in draw_chart().")
 
     # Process each table separately
     for _, (sheet_name, df) in enumerate(zip(sheet_names, dfs)):
