@@ -114,9 +114,12 @@ def crosstab_reader(workbook: pd.ExcelWriter, df: pd.DataFrame, sheet_name: list
         # Extract the sub-dataframe based on the bounding box of the region
         sub_df = (df.iloc[s.bbox[0]:s.bbox[2], s.bbox[1]:s.bbox[3]].pipe(lambda df_: df_.rename(columns=df_.iloc[0]).drop(df_.index[0])))
         
+        # Ensure all column names are strings
+        sub_df.columns = sub_df.columns.astype(str)
+        
         # Remove any columns if the column name is 'nan'
         for col in sub_df.columns:
-            if str(col) == 'nan':
+            if col == 'nan':
                 sub_df.drop(columns=col, inplace=True)
                 
         # logging.info(f"DataFrame columns: {sub_df.columns.tolist()}")
