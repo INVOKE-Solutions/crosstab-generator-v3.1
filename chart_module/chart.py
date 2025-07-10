@@ -2,6 +2,9 @@ from skimage.measure import label, regionprops
 import pandas as pd
 import numpy as np
 from typing import Any
+import logging
+
+logger = logging.getLogger(__name__)
 
 def load_chart(df_charts: pd.DataFrame, filename: bool = False) -> tuple[list[pd.DataFrame], list[str], str]:
     '''
@@ -115,6 +118,8 @@ def crosstab_reader(workbook: pd.ExcelWriter, df: pd.DataFrame, sheet_name: list
         for col in sub_df.columns:
             if str(col) == 'nan':
                 sub_df.drop(columns=col, inplace=True)
+                
+        # logging.info(f"DataFrame columns: {sub_df.columns.tolist()}")
         
         # Bold the column name
         bold = workbook.add_format({'bold': 1})

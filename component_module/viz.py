@@ -20,7 +20,6 @@ def draw_chart(dfs: list[pd.DataFrame], sheet_names: list) -> bytes:
     
     # Create a new Excel workbook in memory
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-    logging.info("Workbook created successfully in draw_chart().")
 
     # Process each table separately
     for _, (sheet_name, df) in enumerate(zip(sheet_names, dfs)):
