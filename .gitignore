@@ -164,3 +164,6 @@ pdf_test/
 
 # STREAMLIT
 .streamlit/
+
+# Logging file
+*.log
