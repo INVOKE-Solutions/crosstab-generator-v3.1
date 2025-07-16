@@ -99,6 +99,8 @@ def sorter(demo: str, df: pd.DataFrame) -> list[str]:
                       key=lambda x: (0 if re.match(r'^U|^B', x) else
                                      1 if re.match(r'^S', x) else
                                      2 if re.match(r'^R|^L', x) else 3))
+    else:
+        return sorted(list(df[demo].unique()))
     
 def sort_order(df: pd.DataFrame, sorting: list[str]) -> pd.DataFrame:
     '''
